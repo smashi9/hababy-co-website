@@ -1,0 +1,2 @@
+-- Initial Hababy & Co Supabase schema
+-- Draft file. Do not run until reviewed.    

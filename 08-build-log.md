@@ -685,3 +685,34 @@ Backend connection logic should be centralized in reusable utility files instead
 **Next action:**
 
 Commit and push the Supabase client utility files, then begin planning the first Supabase database schema.
+
+## Entry 018 — Supabase Client Utilities Committed
+
+**Date:** 10 June 2026
+
+**Tool used:** VS Code / Git / Supabase / ChatGPT guidance
+
+**Task attempted:** Commit the reusable Supabase client utility files.
+
+**What was done:**
+
+- Created `hababy-site/lib/supabase/`.
+- Added reusable Supabase client utilities:
+  - `browser.ts`
+  - `server.ts`
+  - `admin.ts`
+- Ran lint and production build checks.
+- Confirmed the app still builds successfully.
+- Committed and pushed the Supabase client utilities to GitHub.
+
+**Important decision:**
+
+Supabase connection logic is now centralized in utility files instead of being scattered through pages or components.
+
+**Lesson learned:**
+
+A clean backend connection layer makes future coding safer and easier for AI agents to understand.
+
+**Next action:**
+
+Create the first SQL schema file at `hababy-site/supabase/sql/001_initial_schema.sql`.
