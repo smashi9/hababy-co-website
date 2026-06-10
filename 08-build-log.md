@@ -538,3 +538,30 @@ GitHub now gives the project a remote backup and makes it possible to connect th
 
 Update `02-repo-context.md` and `09-deployment-notes.md` with the GitHub repository URL.
 
+## Entry 015 — First Vercel Deployment Completed
+
+**Date:** 10 June 2026
+
+**Tool used:** Vercel / GitHub / ChatGPT guidance
+
+**Task attempted:** Connect the GitHub repository to Vercel and deploy the starter Next.js app.
+
+**What was done:**
+
+- Imported the GitHub repository into Vercel.
+- Set the Vercel root directory to `hababy-site`.
+- Confirmed Vercel detected the app as a Next.js project.
+- Deployed the starter app.
+- Opened the Vercel deployment URL and confirmed the page loads.
+
+**Important decision:**
+
+Vercel must use `hababy-site` as the project root because the repository also contains planning and workflow documents outside the app folder.
+
+**Lesson learned:**
+
+The project now has a working deployment pipeline: local code → GitHub → Vercel.
+
+**Next action:**
+
+Update `02-repo-context.md` and `09-deployment-notes.md` with the Vercel project and deployment URLs.

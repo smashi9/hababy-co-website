@@ -53,12 +53,12 @@ The site should be deployed only after the core Version 1 rules have been tested
 ## Current Deployment Status
 
 ```text
-Deployment status: GitHub repository created; Vercel and Supabase not yet started
+Deployment status: GitHub repository created and first Vercel deployment completed; Supabase not yet started
 GitHub repository: https://github.com/smashi9/hababy-co-website
 Supabase project: TBD
-Vercel project: TBD
+Vercel project: https://hababy-co-website.vercel.app/
 Production domain: TBD
-Staging / preview URL: TBD
+Staging / preview URL: https://hababy-co-website.vercel.app/
 ```
 
 ## Hosting Platform
@@ -832,7 +832,7 @@ The following items are still unknown:
 ```text
 GitHub repository URL
 Supabase project URL
-Vercel project URL
+Vercel project https://hababy-co-website.vercel.app/
 Production domain
 WhatsApp number
 Contact email
