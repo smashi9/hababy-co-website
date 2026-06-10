@@ -468,4 +468,73 @@ Before customizing the site, it is important to confirm that the starter app is 
 
 Create the GitHub repository and make the first commit.
 
+## Entry 013 — Git Repository Created and First Commit Made
+
+**Date:** 10 June 2026
+
+**Tool used:** Git / GitHub / VS Code terminal / ChatGPT guidance
+
+**Task attempted:** Put the Hababy & Co project under version control and create the first GitHub-backed restore point.
+
+**What was done:**
+
+* Confirmed the project should use `project-001-first-website/` as the Git repository root.
+* Checked whether `hababy-site/` had a nested Git repository.
+* Created a parent `.gitignore`.
+* Initialized Git in the project folder.
+* Added the planning documents, workflow files, source materials, brand assets, and Next.js app to version control.
+* Created the first commit.
+
+**Important decision:**
+
+The Git repository tracks both the planning workflow documents and the actual Next.js application.
+
+This keeps the AI handoff system and the codebase together.
+
+**Lesson learned:**
+
+Git gives the project a safe restore point. Before making major AI-generated code changes, the project should be committed so mistakes can be reversed.
+
+**Next action:**
+
+Push the repository to GitHub, then update `02-repo-context.md` with the GitHub repository URL.
+
+
+## Entry 014 — GitHub Repository Created and First Push Completed
+
+**Date:** 10 June 2026
+
+**Tool used:** Git / GitHub / VS Code terminal / ChatGPT guidance
+
+**Task attempted:** Push the Hababy & Co project to GitHub for the first time.
+
+**What was done:**
+
+* Created a GitHub repository:
+
+```text
+https://github.com/smashi9/hababy-co-website
+```
+
+* Added the GitHub repository as the remote origin.
+* Renamed the local branch to `main`.
+* Pushed the local project to GitHub.
+* Set the local `main` branch to track `origin/main`.
+
+**Important decision:**
+
+The GitHub repository contains both:
+
+* The planning and workflow markdown documents
+* The actual Next.js app inside `hababy-site/`
+
+This keeps the AI workflow documentation and the codebase together.
+
+**Lesson learned:**
+
+GitHub now gives the project a remote backup and makes it possible to connect the project to tools like Vercel, Codex, Claude Code, and other AI coding agents.
+
+**Next action:**
+
+Update `02-repo-context.md` and `09-deployment-notes.md` with the GitHub repository URL.
 

@@ -53,8 +53,8 @@ The site should be deployed only after the core Version 1 rules have been tested
 ## Current Deployment Status
 
 ```text
-Deployment status: Not yet started
-GitHub repository: TBD
+Deployment status: GitHub repository created; Vercel and Supabase not yet started
+GitHub repository: https://github.com/smashi9/hababy-co-website
 Supabase project: TBD
 Vercel project: TBD
 Production domain: TBD
