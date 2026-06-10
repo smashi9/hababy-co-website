@@ -565,3 +565,55 @@ The project now has a working deployment pipeline: local code → GitHub → Ver
 **Next action:**
 
 Update `02-repo-context.md` and `09-deployment-notes.md` with the Vercel project and deployment URLs.
+
+## Entry 016 — Supabase Package Installed and Build Passed
+
+**Date:** 10 June 2026
+
+**Tool used:** Supabase / npm / Next.js / VS Code terminal / ChatGPT guidance
+
+**Task attempted:** Create the Supabase project configuration locally and install the Supabase JavaScript client.
+
+**What was done:**
+
+* Created a Supabase project.
+* Added Supabase environment variables to local `.env.local`.
+* Created a safe `.env.example` file with placeholder variable names only.
+* Updated `.gitignore` so `.env.example` can be committed while `.env.local` remains ignored.
+* Installed the Supabase JavaScript client:
+
+```bash
+npm install @supabase/supabase-js
+```
+
+* Ran the production build:
+
+```bash
+npm run build
+```
+
+**Result:**
+
+* `@supabase/supabase-js` installed successfully.
+* The build completed successfully.
+* Next.js detected `.env.local`.
+* No TypeScript or build errors were reported.
+* `.env.local` was not tracked by Git.
+
+**Important note:**
+
+The npm install reported 2 moderate vulnerabilities. `npm audit fix --force` was not run because forced audit fixes can introduce breaking dependency changes. This should be reviewed later if needed.
+
+**Important decision:**
+
+Real Supabase keys are stored only in `.env.local` and should not be committed to GitHub or pasted into chat.
+
+A safe `.env.example` file is committed with placeholder variable names only.
+
+**Lesson learned:**
+
+Environment variables allow the app to connect to external services without exposing secrets in the codebase.
+
+**Next action:**
+
+Create Supabase client files in `hababy-site/lib/supabase/`.
