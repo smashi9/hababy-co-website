@@ -617,3 +617,71 @@ Environment variables allow the app to connect to external services without expo
 **Next action:**
 
 Create Supabase client files in `hababy-site/lib/supabase/`.
+
+## Entry 017 — Supabase Client Utilities Created
+
+**Date:** 10 June 2026
+
+**Tool used:** VS Code / Next.js / Supabase / ChatGPT guidance
+
+**Task attempted:** Create reusable Supabase client utility files for the Hababy & Co app.
+
+**What was done:**
+
+* Created the Supabase utility folder:
+
+```text
+hababy-site/lib/supabase/
+```
+
+* Created browser-safe Supabase client file:
+
+```text
+hababy-site/lib/supabase/browser.ts
+```
+
+* Created server-side Supabase client file:
+
+```text
+hababy-site/lib/supabase/server.ts
+```
+
+* Created admin/server-only Supabase client file using the service role key:
+
+```text
+hababy-site/lib/supabase/admin.ts
+```
+
+* Ran lint check:
+
+```bash
+npm run lint
+```
+
+* Ran production build:
+
+```bash
+npm run build
+```
+
+**Result:**
+
+* Lint passed.
+* Production build passed.
+* TypeScript passed.
+* Next.js successfully detected `.env.local`.
+* No build errors were reported.
+
+**Important decision:**
+
+The Supabase service role key should only be used in server-only code.
+
+The admin client must never be imported into client components or browser-exposed code.
+
+**Lesson learned:**
+
+Backend connection logic should be centralized in reusable utility files instead of being scattered across pages and components.
+
+**Next action:**
+
+Commit and push the Supabase client utility files, then begin planning the first Supabase database schema.
