@@ -24,13 +24,13 @@ This file should be updated whenever the real codebase changes in an important w
 ## Current Status
 
 ```text
-Repository status: Local app created, GitHub repository not yet created
-GitHub repository URL: TBD
+Repository status: Local app created and pushed to GitHub
+GitHub repository URL: https://github.com/smashi9/hababy-co-website
 Local project folder: 02-projects/project-001-first-website/
 Next.js app folder: 02-projects/project-001-first-website/hababy-site/
-Next.js app status: Created and running locally
+Next.js app status: Created, running locally, and deployed to Vercel
 Supabase project: Not yet created
-Vercel project: Not yet created
+Vercel project: https://hababy-co-website.vercel.app/
 Production domain: TBD
 ```
 
