@@ -1,0 +1,471 @@
+# Project 001 Build Log
+
+## Entry 001 — Source Material and Project Brief Setup
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Start Project 001 and convert the original Hababy & Co developer handover into the first clean workflow document.
+
+**What was done:**
+
+* Created the main project folder structure.
+* Created the workflow documentation files.
+* Created `WORKFLOW_GUIDE.md`.
+* Created and updated `AGENTS.md`.
+* Confirmed that the workflow is stable but models are interchangeable.
+* Created a `99-source-materials` folder.
+* Moved the original Hababy & Co developer handover into `99-source-materials`.
+* Created `00-project-brief.md`.
+
+**Important decision:**
+
+The original handover will not be used as one giant instruction file.
+
+Instead, it will be split into focused workflow documents:
+
+* `00-project-brief.md` for the big-picture project definition
+* `01-product-requirements.md` for pages, features, and customer journeys
+* `03-architecture-plan.md` for technical structure
+* `04-ui-brief.md` for brand, visual direction, tone, and design system
+* `06-backend-plan.md` for database, admin, settings, and logic
+* `07-test-plan.md` for acceptance criteria and QA
+* `10-linkedin-case-study.md` for the public story
+
+**Lesson learned:**
+
+A developer handover can contain too much information for one AI agent step. The workflow becomes clearer when the handover is decomposed into smaller markdown files, each with a specific purpose.
+
+**Next action:**
+
+Create `01-product-requirements.md`
+
+## Entry 002 — Product Requirements Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Convert the Hababy & Co project brief and original developer handover into a clean product requirements document.
+
+**What was done:**
+
+* Created `01-product-requirements.md`.
+* Defined the main customer journey.
+* Defined the required pages.
+* Defined the request-to-book flow.
+* Defined the WhatsApp handoff requirements.
+* Defined payment and currency requirements.
+* Defined admin panel requirements.
+* Defined Version 1 out-of-scope items.
+* Added product acceptance criteria.
+* Added open questions for later clarification.
+
+**Important decision:**
+
+The product requirements document focuses on what the website must do.
+
+It does not include the detailed UI design system, technical architecture, or database schema. Those will be handled in separate workflow files.
+
+**Lesson learned:**
+
+A good product requirements document should be detailed enough for an AI planner or developer to understand the product, but not overloaded with visual design tokens or database implementation details.
+
+## Entry 003 — UI Brief Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Convert the Hababy & Co brand identity and visual direction from the original handover into a clean UI brief.
+
+**What was done:**
+
+* Created `04-ui-brief.md`.
+* Defined the brand feel and visual direction.
+* Separated brand and UI guidance from product requirements.
+* Added confirmed logo asset details.
+* Added logo usage rules.
+* Added colour palette and colour usage rules.
+* Added typography rules.
+* Added imagery, icon, pattern, and tone guidance.
+* Added page-level UI direction.
+* Added UI acceptance criteria.
+* Added open UI questions.
+
+**Important decision:**
+
+The UI brief should guide visual design and implementation, but it should not contain backend logic, database schema, or detailed technical architecture.
+
+The confirmed SVG logo files are:
+
+* `hababy-logo-primary.svg`
+* `hababy-logo-horizontal.svg`
+* `hababy-stork-mark.svg`
+
+These should be stored in:
+
+```text
+assets/brand/
+```
+
+**Lesson learned:**
+
+A UI brief is different from a product requirements document. Product requirements explain what the website must do. A UI brief explains how the website should feel, look, and communicate.
+
+**Next action:**
+
+Create `03-architecture-plan.md`.
+
+## Entry 004 — Architecture Plan Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Convert the product requirements and UI direction into a technical architecture plan.
+
+**What was done:**
+
+* Created `03-architecture-plan.md`.
+* Confirmed the recommended stack: Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui, Supabase, Vercel, next-intl, react-hook-form, and zod.
+* Defined the recommended application structure.
+* Defined public routes, admin routes, component organization, and utility folders.
+* Defined the approach for booking flow state, pricing logic, WhatsApp handoff, i18n, admin auth, brand assets, deployment, and environment variables.
+* Clarified that the full database schema belongs in `06-backend-plan.md`.
+* Clarified that the visual design system belongs in `04-ui-brief.md`.
+
+**Important decision:**
+
+The architecture should stay simple and pilot-friendly. The site should be built as a real full-stack app, but without over-engineering features like online payment, customer accounts, automated WhatsApp chatbot, or multi-city logic in Version 1.
+
+**Lesson learned:**
+
+An architecture plan is not the same as a backend plan. The architecture plan explains how the application is organized. The backend plan will explain the actual data model, database tables, settings, admin logic, and security rules.
+
+**Next action:**
+
+Create `06-backend-plan.md`.
+
+## Entry 005 — Backend Plan Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Convert the Hababy & Co product requirements and architecture into a backend and Supabase planning document.
+
+**What was done:**
+
+* Created `06-backend-plan.md`.
+* Defined the Supabase backend approach.
+* Defined core database tables.
+* Defined products, bundles, Welcome Kits, customers, orders, inventory, settings, and content models.
+* Defined the order lifecycle and order statuses.
+* Defined payment and currency logic.
+* Defined pricing, deposit, urgent fee, and same-day logic.
+* Defined WhatsApp handoff data requirements.
+* Defined admin authentication and access rules.
+* Defined basic Row Level Security principles.
+* Defined seed data requirements.
+* Defined backend acceptance criteria.
+* Added open backend questions.
+
+**Important decision:**
+
+The backend should support the real business pilot, but should not over-automate the rental operation in Version 1.
+
+The site will capture structured booking requests, but Hababy & Co will manually confirm availability, payment, and delivery.
+
+**Lesson learned:**
+
+A backend plan is where business rules become data structures. It translates the product idea into tables, fields, statuses, settings, validation, and admin controls.
+
+**Next action:**
+
+Create `07-test-plan.md`.
+
+## Entry 006 — Test Plan Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Create a complete test plan for the Hababy & Co website before implementation.
+
+**What was done:**
+
+* Created `07-test-plan.md`.
+* Defined testing levels and environments.
+* Added customer-facing page tests.
+* Added booking flow tests.
+* Added same-day blocking tests.
+* Added pricing and estimate tests.
+* Added payment and currency tests.
+* Added WhatsApp handoff tests.
+* Added admin panel tests.
+* Added backend and database tests.
+* Added security tests.
+* Added UI, mobile, language, accessibility, SEO, and deployment tests.
+* Added non-coder testing scenarios.
+* Added bug reporting format and launch blockers.
+* Added final launch checklist.
+
+**Important decision:**
+
+The test plan should protect the business rules, not just check whether pages load.
+
+The most important things to protect are:
+
+* Request-first booking
+* No same-day orders
+* No online payment
+* Order saving before WhatsApp handoff
+* Admin control of pilot data
+* Mobile usability
+* Customer data protection
+
+**Lesson learned:**
+
+Testing is not only a developer task. A non-coder product owner can test the website using realistic customer scenarios and clear acceptance checklists.
+
+**Next action:**
+
+Create `09-deployment-notes.md`, knowing that some sections will remain incomplete until the actual app, GitHub repository, Supabase project, and Vercel project exist.
+
+## Entry 007 — Deployment Notes Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Create deployment notes for the Hababy & Co website.
+
+**What was done:**
+
+* Created `09-deployment-notes.md`.
+* Defined the intended deployment stack: GitHub, Vercel, and Supabase.
+* Added expected environment variables.
+* Added Supabase setup checklist.
+* Added Vercel setup checklist.
+* Added preview deployment checklist.
+* Added production deployment checklist.
+* Added launch blockers.
+* Added domain setup notes.
+* Added privacy, backup, rollback, and post-launch monitoring notes.
+* Added a first live test order template.
+* Added a list of TBD items.
+
+**Important decision:**
+
+The deployment notes will remain partially incomplete until the actual GitHub repository, Supabase project, Vercel project, production domain, WhatsApp number, admin email, and final pricing details exist.
+
+**Lesson learned:**
+
+Deployment planning can start before the app exists, but deployment notes should clearly mark unknown items as TBD instead of pretending they have already been decided.
+
+**Next action:**
+
+Create `02-repo-context.md` as a placeholder, then move toward creating the actual GitHub repository and Next.js app.
+
+## Entry 008 — Repo Context Placeholder Created
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Create the initial repository context document before the actual codebase exists.
+
+**What was done:**
+
+* Created `02-repo-context.md`.
+* Recorded that the GitHub repository has not yet been created.
+* Recorded that the Next.js app has not yet been created.
+* Added the planned technical stack.
+* Added expected commands and environment variables.
+* Added expected brand asset filenames.
+* Added a rule for updating repo context as the codebase develops.
+
+**Important decision:**
+
+`02-repo-context.md` will start as a placeholder and become more useful after the actual GitHub repository, Next.js app, Supabase project, and Vercel project exist.
+
+**Lesson learned:**
+
+Repo context is different from architecture. Architecture explains the intended structure. Repo context records the actual codebase reality as it develops.
+
+**Next action:**
+
+Move from planning into setup: create the GitHub repository and initialize the Next.js app.
+
+## Entry 009 — Next.js App Created Successfully
+
+**Date:** 10 June 2026
+
+**Tool used:** VS Code terminal / create-next-app / ChatGPT guidance
+
+**Task attempted:** Create the actual Next.js application for Hababy & Co.
+
+**What was done:**
+
+* Created the Next.js app inside:
+
+```text
+02-projects/project-001-first-website/hababy-site/
+```
+
+* Used `create-next-app`.
+* Chose TypeScript.
+* Chose ESLint.
+* Chose not to enable React Compiler.
+* Chose to include an app-level `AGENTS.md` for Next.js-specific AI coding guidance.
+* Started the local development server.
+* Confirmed the starter app works locally.
+
+**Important decision:**
+
+The actual application code will live inside the `hababy-site/` subfolder, while the planning and workflow documents remain in the parent project folder.
+
+This keeps the documentation and code connected but not mixed together.
+
+**Lesson learned:**
+
+The project now has two levels of AI guidance:
+
+```text
+01-workflow-kit/AGENTS.md
+```
+
+This is the overall AI workflow guide.
+
+```text
+project-001-first-website/hababy-site/AGENTS.md
+```
+
+This is the app-level Next.js coding guide created during setup.
+
+**Current status:**
+
+The planning phase has now moved into real project setup.
+
+The starter Next.js app exists and runs locally.
+
+**Next action:**
+
+Update `02-repo-context.md` to reflect the real app folder, actual commands, and current build status.
+
+## Entry 010 — Repo Context Updated After App Creation
+
+**Date:** 10 June 2026
+
+**Tool used:** ChatGPT
+
+**Task attempted:** Update the repository context after creating the actual Next.js app.
+
+**What was done:**
+
+* Updated `02-repo-context.md`.
+* Recorded that the actual app now lives inside `hababy-site/`.
+* Recorded that the starter Next.js app was created and tested locally.
+* Recorded the setup choices: TypeScript, ESLint, React Compiler disabled, and app-level `AGENTS.md` included.
+* Clarified the difference between workflow-level `AGENTS.md` and app-level `AGENTS.md`.
+* Added the current app status, known issues, expected commands, and next practical steps.
+* Added the next step of copying brand SVG files into the app’s `public/brand/` folder.
+
+**Important decision:**
+
+The repo context now reflects the real codebase state rather than the earlier placeholder state.
+
+**Lesson learned:**
+
+The repo context file should describe what actually exists, not what we planned before implementation started.
+
+**Next action:**
+
+Copy the confirmed SVG logo files into `hababy-site/public/brand/` and confirm the app still runs.
+
+## Entry 011 — Brand Assets Copied Into App
+
+**Date:** 10 June 2026
+
+**Tool used:** VS Code / ChatGPT guidance
+
+**Task attempted:** Copy confirmed Hababy & Co SVG logo files into the actual Next.js app.
+
+**What was done:**
+
+- Created `hababy-site/public/brand/`.
+- Copied the confirmed SVG brand assets into the app’s public folder.
+- Confirmed the expected runtime logo paths:
+
+```text
+/brand/hababy-logo-primary.svg
+/brand/hababy-logo-horizontal.svg
+/brand/hababy-stork-mark.svg
+
+## Entry 012 — Starter App Checks Passed
+
+**Date:** 10 June 2026
+
+**Tool used:** VS Code terminal / Next.js
+
+**Task attempted:** Confirm that the newly created Next.js starter app runs, lints, and builds successfully.
+
+**What was done:**
+
+* Ran the local development server with:
+
+```bash
+npm run dev
+```
+
+* Confirmed the app loads at:
+
+```text
+http://localhost:3000
+```
+
+* Ran lint check with:
+
+```bash
+npm run lint
+```
+
+* Ran production build check with:
+
+```bash
+npm run build
+```
+
+**Result:**
+
+* Local development server started successfully.
+* Homepage returned `200`.
+* Lint completed with no reported errors.
+* Production build compiled successfully.
+* TypeScript check completed successfully.
+* Static pages generated successfully.
+
+**Important note:**
+
+The terminal showed a warning about the default `vercel.svg` image aspect ratio. This is from the default Next.js starter page and is not a blocker. The starter page will be replaced during Hababy & Co implementation.
+
+**Confirmed technical detail:**
+
+The app is running:
+
+```text
+Next.js 16.2.9
+Turbopack
+```
+
+**Lesson learned:**
+
+Before customizing the site, it is important to confirm that the starter app is healthy. This gives a clean baseline so future errors are easier to identify.
+
+**Next action:**
+
+Create the GitHub repository and make the first commit.
+
+
