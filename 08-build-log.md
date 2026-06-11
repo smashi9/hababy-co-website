@@ -763,3 +763,61 @@ This is the intended manual AI workflow: one model drafts, another reviews, the 
 **Next action:**
 
 Commit the reviewed SQL schema, then decide whether to run it in a disposable Supabase project or the real project.
+
+## Entry 020 — Initial Supabase Schema Tested Successfully
+
+**Date:** 11 June 2026
+
+**Tool used:** Supabase SQL Editor / ChatGPT guidance
+
+**Task attempted:** Test the reviewed initial Supabase schema in a disposable Supabase project before applying it to the real Hababy & Co backend.
+
+**What was done:**
+
+* Created a disposable/test Supabase project.
+* Ran `hababy-site/supabase/sql/001_initial_schema.sql` in the test project SQL Editor.
+* Confirmed the SQL returned:
+
+```text
+Success. No rows returned
+```
+
+* Verified that the expected public tables were created:
+
+```text
+accessories
+admin_users
+bundles
+categories
+content
+customers
+inventory
+orders
+products
+settings
+welcome_kits
+```
+
+* Ran:
+
+```sql
+select count(*) from public.settings;
+```
+
+* Confirmed the result was:
+
+```text
+1
+```
+
+**Important decision:**
+
+The initial schema was tested in a disposable Supabase project before being applied to the real project.
+
+**Lesson learned:**
+
+Testing database schema in a practice project is safer than running it directly in the real backend. SQL changes affect the database immediately, so a successful disposable test gives confidence before touching the real project.
+
+**Next action:**
+
+Run the reviewed schema in the real Hababy & Co Supabase project and verify the same table/settings checks.
