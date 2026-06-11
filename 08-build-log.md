@@ -991,3 +991,35 @@ Important decision:
 Lesson learned:
 
 Creating a small test route is a safe way to confirm the data pipeline before building full UI pages.
+
+## Entry 026 — UI Direction Selected and UI Handoff Created
+
+**Date:** 11 June 2026
+
+**Tool used:** Gemini / ChatGPT guidance
+
+**Task attempted:** Use Gemini to explore homepage design directions and convert the selected direction into a builder-ready UI handoff.
+
+**What was done:**
+
+- Used Gemini as the UI/visual design partner.
+- Asked Gemini to generate three homepage design directions based on the project brief, product requirements, and UI brief.
+- Reviewed the three directions:
+  - Premium Editorial Boutique
+  - Warm Family Service
+  - Cultured Craft
+- Selected Direction 2: Warm Family Service.
+- Saved Gemini’s raw output to `99-source-materials/gemini-ui-directions-2026-06-11.md`.
+- Updated `05-ui-handoff.md` with the selected design direction, homepage section order, visual rules, component rules, copy rules, implementation priorities, and acceptance criteria.
+
+**Important decision:**
+
+The project will use the Warm Family Service direction for Version 1 because it best supports the request-first, parent-led, manually confirmed service model.
+
+**Lesson learned:**
+
+The UI brief explains the brand direction, while the UI handoff translates the selected design concept into practical build instructions for Claude Code, Codex, or another implementation agent.
+
+**Next action:**
+
+Ask Claude Code or Codex to implement the first branded homepage foundation using `05-ui-handoff.md` as the source of truth.
