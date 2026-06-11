@@ -821,3 +821,35 @@ Testing database schema in a practice project is safer than running it directly 
 **Next action:**
 
 Run the reviewed schema in the real Hababy & Co Supabase project and verify the same table/settings checks.
+
+## Entry 021 — Initial Supabase Schema Applied to Real Project
+
+**Date:** 11 June 2026
+
+**Tool used:** Supabase SQL Editor / ChatGPT guidance
+
+**Task attempted:** Apply the reviewed initial Supabase schema to the real Hababy & Co Supabase project.
+
+**What was done:**
+
+- Ran `hababy-site/supabase/sql/001_initial_schema.sql` in the real Supabase project SQL Editor.
+- Confirmed the SQL returned:
+
+```text
+Success. No rows returned
+
+Verified that the expected public tables were created:
+accessories
+admin_users
+bundles
+categories
+content
+customers
+inventory
+orders
+products
+settings
+welcome_kits
+
+Ran select count(*) from public.settings;
+Confirmed the result was: 1
