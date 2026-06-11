@@ -716,3 +716,50 @@ A clean backend connection layer makes future coding safer and easier for AI age
 **Next action:**
 
 Create the first SQL schema file at `hababy-site/supabase/sql/001_initial_schema.sql`.
+
+## Entry 019 — Initial Supabase Schema Drafted and Reviewed
+
+**Date:** 11 June 2026
+
+**Tool used:** Claude Code / Codex / ChatGPT guidance / VS Code
+
+**Task attempted:** Draft and review the first Supabase database schema for the Hababy & Co backend.
+
+**What was done:**
+
+- Used Claude Code to draft `hababy-site/supabase/sql/001_initial_schema.sql`.
+- Used Codex to review the drafted SQL against the project planning files.
+- Identified and fixed a critical ordering issue where `is_admin()` was created before `admin_users`.
+- Removed the `public_settings` view to avoid exposing settings through a database view.
+- Confirmed that settings should be handled later through server-side Next.js code with a public-safe whitelist.
+- Added a defensive `drop view if exists public.public_settings;`.
+- Added admin bootstrap notes.
+- Added or confirmed non-negative/positive checks for:
+  - `amount_received`
+  - `minimum_order_value_mad`
+  - `discount_3_6_days_pct`
+  - `multiplier_14d`
+  - `multiplier_30d`
+- Preserved Version 1 business rules:
+  - request-first booking
+  - no online payment
+  - card disabled by default
+  - same-day disabled by default
+  - urgent fees default to 0
+  - MAD as base currency
+  - EUR/USD as offline cash options
+  - WhatsApp handoff does not replace saved orders
+
+**Important decision:**
+
+The SQL schema is now a reviewed draft and should be committed before being run in Supabase.
+
+The public site should not read the raw `settings` table directly. Public-safe settings should later be returned through server-side app code.
+
+**Lesson learned:**
+
+This is the intended manual AI workflow: one model drafts, another reviews, the first model revises, and the human controls when changes are accepted and applied.
+
+**Next action:**
+
+Commit the reviewed SQL schema, then decide whether to run it in a disposable Supabase project or the real project.
