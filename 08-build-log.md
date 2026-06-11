@@ -853,3 +853,27 @@ welcome_kits
 
 Ran select count(*) from public.settings;
 Confirmed the result was: 1
+
+## Entry 022 — First Admin User Bootstrapped
+
+**Date:** 11 June 2026
+
+**Tool used:** Supabase Authentication / Supabase SQL Editor / ChatGPT guidance
+
+**Task attempted:** Create and connect the first admin user for the Hababy & Co backend.
+
+**What was done:**
+
+- Created the first admin user in Supabase Authentication.
+- Copied the Auth user UUID.
+- Inserted the Auth user UUID and admin email into `public.admin_users`.
+- Set the admin role to `owner`.
+- Set `active` to `true`.
+- Verified that the `admin_users` table contains the admin row.
+
+**Important decision:**
+
+Admin access requires both:
+
+```text
+Supabase Auth user
