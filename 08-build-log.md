@@ -950,3 +950,44 @@ Schema creates the database structure. Seed data fills that structure with start
 **Next action:**
 
 Commit this build log update, then create a simple app-side Supabase read test to confirm that the Next.js app can read catalogue data from the real Supabase backend.
+
+## Entry 025 — App Connected to Supabase Product Data
+
+**Date:** 11 June 2026
+
+**Tool used:** Next.js / Supabase / Vercel / VS Code / ChatGPT guidance
+
+**Task attempted:** Confirm that the Next.js app can read seeded product data from the real Supabase backend.
+
+**What was done:**
+
+- Created `hababy-site/lib/supabase/queries.ts`.
+- Added `getProductSummaries()` to read active products from Supabase.
+- Created temporary test route:
+
+```text
+hababy-site/app/supabase-test/page.tsx
+Fixed an initial file-location issue where queries.ts was accidentally created in the wrong folder.
+Fixed the local Supabase URL environment variable format.
+Added Supabase environment variables to Vercel.
+Confirmed locally that /supabase-test loads successfully.
+Confirmed the page displays seeded product data from Supabase.
+Ran:
+npm run lint
+npm run build
+
+Result:
+
+Lint passed.
+Production build passed.
+/supabase-test was included in the build.
+The app successfully connected to Supabase and read product data locally.
+Vercel environment variables were added so the deployed app can read from Supabase.
+
+Important decision:
+
+/supabase-test is temporary. It exists only to prove the app-to-Supabase connection works before building real catalogue pages.
+
+Lesson learned:
+
+Creating a small test route is a safe way to confirm the data pipeline before building full UI pages.
