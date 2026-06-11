@@ -1023,3 +1023,53 @@ The UI brief explains the brand direction, while the UI handoff translates the s
 **Next action:**
 
 Ask Claude Code or Codex to implement the first branded homepage foundation using `05-ui-handoff.md` as the source of truth.
+
+## Entry 027 — First Branded Homepage Foundation Implemented
+
+**Date:** 11 June 2026
+
+**Tool used:** Codex / Claude Code / Next.js / ChatGPT guidance
+
+**Task attempted:** Implement and review the first branded Hababy & Co homepage foundation.
+
+**What was done:**
+
+- Used Codex as the implementation agent.
+- Codex read the project brief, product requirements, UI brief, UI handoff, test plan, and Supabase query file.
+- Replaced the default Next.js starter homepage.
+- Added a branded global layout foundation.
+- Added a site header and footer.
+- Added a first homepage shell based on the selected Gemini direction: Warm Family Service.
+- Added homepage sections for:
+  - Hero
+  - How It Works
+  - Value propositions
+  - Product/category preview
+  - Trust and safety
+  - Bundles preview
+  - Welcome Kits preview
+  - Rabat pilot delivery zones
+  - Final CTA
+- Used seeded Supabase product data for the product preview, with a safe fallback.
+- Preserved `/supabase-test`.
+- Did not touch `.env.local`.
+- Did not modify Supabase SQL files.
+- Did not add booking flow, admin pages, or online payment.
+
+**Review process:**
+
+- Used Claude Code as the reviewer.
+- Claude confirmed there were no critical issues.
+- Claude recommended two fixes before commit:
+  - load the approved fonts instead of starter fonts
+  - remove the misleading FAQ nav link
+- Claude accidentally applied those targeted fixes after the fix prompt was sent to the wrong agent.
+- Used Codex again to review the final state before commit.
+- Codex confirmed there were no critical issues.
+- Codex identified minor footer polish: placeholder policy items looked like links but were not clickable.
+- Footer placeholder policy items were adjusted to appear as muted placeholder text instead of links.
+- Ran:
+
+```bash
+npm run lint
+npm run build
