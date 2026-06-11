@@ -877,3 +877,24 @@ Admin access requires both:
 
 ```text
 Supabase Auth user
+
+## Entry 023 — Seed Catalogue Drafted, Reviewed, and Tested
+
+**Date:** 11 June 2026
+
+**Tool used:** Claude Code / Codex / Supabase SQL Editor / ChatGPT guidance
+
+**Task attempted:** Draft, review, and test the first seed catalogue SQL file for Hababy & Co.
+
+**What was done:**
+
+- Created `hababy-site/supabase/sql/002_seed_catalogue.sql`.
+- Used Claude Code to draft starter seed data.
+- Used Codex to review the seed file against the schema and planning documents.
+- Confirmed the seed file does not add fake customers, fake orders, or fake admin users.
+- Confirmed the seed file uses placeholder catalogue/content data only.
+- Ran the seed file in the disposable/test Supabase project after the initial schema.
+- Confirmed the SQL returned:
+
+```text
+Success. No rows returned
