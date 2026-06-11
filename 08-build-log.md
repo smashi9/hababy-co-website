@@ -898,3 +898,55 @@ Supabase Auth user
 
 ```text
 Success. No rows returned
+
+## Entry 024 — Seed Catalogue Applied to Real Supabase Project
+
+**Date:** 11 June 2026
+
+**Tool used:** Supabase SQL Editor / ChatGPT guidance
+
+**Task attempted:** Apply the reviewed seed catalogue data to the real Hababy & Co Supabase project.
+
+**What was done:**
+
+* Ran `hababy-site/supabase/sql/002_seed_catalogue.sql` in the real Supabase project.
+* Confirmed the SQL returned successfully.
+* Verified that the real project now contains the expected starter data.
+
+**Verified seed counts:**
+
+```text
+categories: 7
+products: 8
+accessories: 6
+bundles: 6
+welcome_kits: 4
+content: 20
+```
+
+**Important decision:**
+
+The real Supabase backend now contains starter catalogue and content data for development.
+
+This seed data is approved for development use, but not yet final for launch.
+
+**Items still requiring review before launch:**
+
+* Product prices
+* Product deposits
+* Product descriptions
+* Bundle prices and contents
+* Welcome Kit prices and contents
+* Legal and policy copy
+* French translations
+* Delivery zone fees
+* WhatsApp number
+* Final safety wording for car seats
+
+**Lesson learned:**
+
+Schema creates the database structure. Seed data fills that structure with starter information so the app can display real-looking pages during development.
+
+**Next action:**
+
+Commit this build log update, then create a simple app-side Supabase read test to confirm that the Next.js app can read catalogue data from the real Supabase backend.
