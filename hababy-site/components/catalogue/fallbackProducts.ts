@@ -1,0 +1,100 @@
+import type { ProductDetail, ProductSummary } from "@/lib/supabase/queries";
+
+const fallbackDetails: ProductDetail[] = [
+  {
+    id: "fallback-travel-cot",
+    name: "Travel cot",
+    slug: "travel-cot",
+    description:
+      "Development preview: a compact travel cot for sleep during a Rabat stay. Exact model, fit, and availability are confirmed after request.",
+    image_gallery: [],
+    daily_price_mad: 60,
+    weekly_price_mad: 300,
+    monthly_price_mad: 900,
+    deposit_mad: 500,
+    included_items: ["Travel cot frame", "Mattress pad", "Carry bag"],
+    optional_accessories: [],
+    safety_notes: "Follow manufacturer age and weight limits. Final suitability is confirmed before handover.",
+    cleaning_notes: "Cleaned, checked, and prepared before delivery.",
+    age_guidance: "Newborn to about 3 years",
+    weight_guidance: "Up to about 15 kg",
+    height_guidance: null,
+    requires_child_details: false,
+    availability_mode: "request",
+    model_image_note: true,
+    display_order: 1,
+  },
+  {
+    id: "fallback-compact-stroller",
+    name: "Compact stroller",
+    slug: "compact-stroller",
+    description:
+      "Development preview: a lightweight stroller for airport arrivals, city walks, and family visits.",
+    image_gallery: [],
+    daily_price_mad: 50,
+    weekly_price_mad: 250,
+    monthly_price_mad: 750,
+    deposit_mad: 400,
+    included_items: ["Stroller", "Rain cover"],
+    optional_accessories: [],
+    safety_notes: "Harness use is required. Exact stroller model is confirmed before delivery.",
+    cleaning_notes: "Wiped down, checked, and prepared before each rental.",
+    age_guidance: "About 6 months and up",
+    weight_guidance: "Up to about 22 kg",
+    height_guidance: null,
+    requires_child_details: false,
+    availability_mode: "request",
+    model_image_note: true,
+    display_order: 2,
+  },
+  {
+    id: "fallback-infant-car-seat",
+    name: "Infant car seat",
+    slug: "infant-car-seat",
+    description:
+      "Development preview: rear-facing infant car seat request. Child details are required so suitability can be personally confirmed.",
+    image_gallery: [],
+    daily_price_mad: 50,
+    weekly_price_mad: 250,
+    monthly_price_mad: 700,
+    deposit_mad: 500,
+    included_items: ["Infant car seat", "Base if available"],
+    optional_accessories: [],
+    safety_notes:
+      "Child age, approximate weight, and height are required. Fitting and suitability are personally confirmed before handover.",
+    cleaning_notes: "Cleaned and inspected before each rental.",
+    age_guidance: "Newborn to about 12 months",
+    weight_guidance: "About 0-13 kg",
+    height_guidance: "Requested before confirmation when relevant",
+    requires_child_details: true,
+    availability_mode: "confirm",
+    model_image_note: true,
+    display_order: 3,
+  },
+];
+
+export const fallbackProductDetails = fallbackDetails;
+
+export const fallbackProductSummaries: ProductSummary[] = fallbackDetails.map(
+  ({
+    id,
+    name,
+    slug,
+    description,
+    daily_price_mad,
+    weekly_price_mad,
+    deposit_mad,
+    availability_mode,
+    display_order,
+  }) => ({
+    id,
+    name,
+    slug,
+    description,
+    daily_price_mad,
+    weekly_price_mad,
+    deposit_mad,
+    availability_mode,
+    display_order,
+  })
+);

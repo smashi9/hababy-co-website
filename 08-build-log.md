@@ -1193,3 +1193,57 @@ For this project, Impeccable is useful as a critique and diagnosis layer, but fi
 **Next action:**
 
 Revert any unwanted uncommitted design changes, confirm the app still builds, and continue with the next functional milestone: catalogue foundation and product pages.
+
+## Entry 031 — Catalogue Foundation Implemented
+
+**Date:** 12 June 2026
+
+**Tool used:** Codex / Next.js / Supabase read queries
+
+**Task attempted:** Build the first public catalogue foundation for Hababy & Co.
+
+**What was done:**
+
+* Created a public product catalogue page at:
+
+```text
+hababy-site/app/products/page.tsx
+```
+
+* Created a basic product detail route at:
+
+```text
+hababy-site/app/products/[slug]/page.tsx
+```
+
+* Added reusable catalogue components for:
+  * product cards
+  * product grids
+  * product detail display
+  * development-safe fallback product data
+* Extended `hababy-site/lib/supabase/queries.ts` with `getProductBySlug(slug)`.
+* Expanded product summaries to include descriptions for public catalogue cards.
+* Kept all product reads server-side and read-only.
+* Added safe fallback behavior if Supabase is unavailable or the catalogue is empty.
+* Updated header/footer navigation so Rent Gear links to `/products`.
+* Preserved request-first language:
+  * customer submits a request
+  * Hababy & Co confirms availability
+  * payment/deposit are arranged before handover
+* Added car-seat-specific child detail guidance on safety-sensitive product detail pages.
+* Preserved `/supabase-test`.
+* Did not touch `.env.local`.
+* Did not modify or run Supabase SQL files.
+* Did not add booking flow, admin pages, or online payment.
+
+**Result:**
+
+The public site now has a real catalogue foundation powered by Supabase product data with development-safe fallbacks.
+
+**Important decision:**
+
+The catalogue CTAs remain placeholders that guide users toward the request-first model. They do not create bookings yet.
+
+**Next action:**
+
+Human visual review of `/products` and `/products/[slug]`, then build the actual request-to-book flow in a later milestone.

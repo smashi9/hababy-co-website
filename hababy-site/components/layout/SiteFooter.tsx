@@ -2,12 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 const footerLinks = [
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Safety", href: "#safety" },
-  { label: "Delivery Zones", href: "#delivery-zones" },
-  { label: "Bundles", href: "#bundles" },
-  { label: "Welcome Kits", href: "#welcome-kits" },
-  { label: "Request a booking", href: "#request" },
+  { label: "Rent Gear", href: "/products" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Safety", href: "/#safety" },
+  { label: "Delivery Zones", href: "/#delivery-zones" },
+  { label: "Bundles", href: "/#bundles" },
+  { label: "Welcome Kits", href: "/#welcome-kits" },
+  { label: "Request a booking", href: "/#request" },
 ];
 
 const policyLinks = ["Terms", "Privacy", "Deposit Policy", "Cancellation Policy"];
@@ -53,7 +54,7 @@ export function SiteFooter() {
               </span>
             ))}
           </div>
-          <Link href="#contact" className="btn btn-secondary mt-6 inline-flex">
+          <Link href="/#contact" className="btn btn-secondary mt-6 inline-flex">
             Chat on WhatsApp
           </Link>
         </div>

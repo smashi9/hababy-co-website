@@ -2,11 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
-  { label: "Rent Gear", href: "#products" },
-  { label: "Bundles", href: "#bundles" },
-  { label: "Welcome Kits", href: "#welcome-kits" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Safety", href: "#safety" },
+  { label: "Rent Gear", href: "/products" },
+  { label: "Bundles", href: "/#bundles" },
+  { label: "Welcome Kits", href: "/#welcome-kits" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Safety", href: "/#safety" },
 ];
 
 export function SiteHeader() {
@@ -36,10 +36,10 @@ export function SiteHeader() {
           <span className="hidden rounded-full border border-taupe/40 px-3 py-1 text-sm font-semibold text-ink/75 sm:inline-flex">
             EN
           </span>
-          <Link href="#contact" className="btn btn-secondary hidden sm:inline-flex">
+          <Link href="/#contact" className="btn btn-secondary hidden sm:inline-flex">
             Chat on WhatsApp
           </Link>
-          <Link href="#request" className="btn btn-primary">
+          <Link href="/#request" className="btn btn-primary">
             Request a booking
           </Link>
         </div>

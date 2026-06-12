@@ -61,3 +61,28 @@ The change log records major decisions that affect the project direction.
 * Local development server tested successfully
 
 **Status:** Accepted
+
+## Change 003 — Public Catalogue Foundation Added
+
+**Date:** 12 June 2026
+
+**Change type:** Product surface / customer journey
+
+**Summary:** Added the first public product catalogue and product detail foundation.
+
+**Reason:** Hababy & Co needs customers to browse rental gear before the future request-to-book flow is built. This milestone introduces real catalogue routes without creating booking, admin, or online payment functionality.
+
+**Files affected:**
+
+* `hababy-site/app/products/page.tsx`
+* `hababy-site/app/products/[slug]/page.tsx`
+* `hababy-site/components/catalogue/`
+* `hababy-site/lib/supabase/queries.ts`
+* `hababy-site/components/layout/SiteHeader.tsx`
+* `hababy-site/components/layout/SiteFooter.tsx`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Use Supabase read queries for active product data, with development-safe fallback content if Supabase is unavailable. Keep all CTAs request-first and avoid booking creation until the dedicated booking-flow milestone.
+
+**Status:** Accepted
