@@ -1073,3 +1073,37 @@ Ask Claude Code or Codex to implement the first branded homepage foundation usin
 ```bash
 npm run lint
 npm run build
+
+## Entry 028 — Impeccable Design QA Installed and Initialized
+
+**Date:** 11 June 2026
+
+**Tool used:** Impeccable / Claude Code / ChatGPT guidance
+
+**Task attempted:** Add Impeccable as a design critique and polish tool for the Hababy & Co workflow.
+
+**What was done:**
+
+- Installed Impeccable skills into `.claude/skills/impeccable/`.
+- Resolved a Windows installation issue by making Git's `unzip.exe` available in the PowerShell session.
+- Ran `/impeccable init`.
+- Created `PRODUCT.md` as a product/design strategy source of truth.
+- Ran `/impeccable document`.
+- Created `DESIGN.md` as the visual design system.
+- Created `.impeccable/design.json` as a machine-readable design sidecar.
+- Added local Impeccable/Claude settings files to `.gitignore`.
+
+**Important decision:**
+
+Impeccable will be used as a design QA and critique layer, not as a replacement for the existing workflow.
+
+Current role allocation remains:
+
+```text
+Gemini = design exploration
+05-ui-handoff.md = builder handoff
+Codex = implementation
+Claude Code = review
+Impeccable = design critique / polish guidance
+ChatGPT = workflow guide
+Human = approval and testing

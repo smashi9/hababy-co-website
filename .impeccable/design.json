@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-12T00:00:00Z",
+  "title": "Design System: Hababy & Co",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Marrakech Red", "canonical": "#b94a48", "tonalRamp": ["#2c1110", "#4f1e1c", "#73302d", "#9f3d3b", "#b94a48", "#cd7674", "#dca5a1", "#ecccc9", "#f7e8e7"] },
+      "primary-deep": { "role": "primary", "displayName": "Marrakech Red Deep", "canonical": "#9f3d3b", "tonalRamp": ["#260e0d", "#451917", "#682825", "#8a3633", "#9f3d3b", "#c06f6c", "#d9a3a0", "#ecccca", "#f6e7e6"] },
+      "rose": { "role": "secondary", "displayName": "Rose Dust", "canonical": "#dca5a1", "tonalRamp": ["#3a201e", "#5d322f", "#824642", "#a85d58", "#c47e79", "#dca5a1", "#e7c1be", "#f1dcda", "#faf0ef"] },
+      "sand": { "role": "secondary", "displayName": "Sand", "canonical": "#ead7c3", "tonalRamp": ["#3a3022", "#5c4c37", "#80694e", "#a68a6b", "#c9b294", "#ead7c3", "#f0e3d5", "#f6eee5", "#fcf8f3"] },
+      "sage": { "role": "tertiary", "displayName": "Sage", "canonical": "#8fa18a", "tonalRamp": ["#1d231b", "#323b2f", "#4a5645", "#63725c", "#7a8a73", "#8fa18a", "#aebaa9", "#cdd4c9", "#ecefea"] },
+      "sage-ink": { "role": "tertiary", "displayName": "Sage Ink", "canonical": "#506549", "tonalRamp": ["#161c13", "#26301f", "#37452d", "#48593b", "#506549", "#6f865f", "#97aa89", "#c2cdb8", "#e6ebe1"] },
+      "taupe": { "role": "neutral", "displayName": "Taupe", "canonical": "#a89e94", "tonalRamp": ["#262320", "#403b35", "#5b544c", "#786f65", "#928779", "#a89e94", "#c2bbb3", "#dcd8d2", "#f0eeea"] },
+      "ink": { "role": "neutral", "displayName": "Charcoal", "canonical": "#333333", "tonalRamp": ["#000000", "#1a1a1a", "#262626", "#333333", "#4d4d4d", "#666666", "#999999", "#cccccc", "#f2f2f2"] },
+      "surface": { "role": "neutral", "displayName": "White", "canonical": "#ffffff", "tonalRamp": ["#cfcfcf", "#dadada", "#e4e4e4", "#ededed", "#f4f4f4", "#f9f9f9", "#fcfcfc", "#fefefe", "#ffffff"] },
+      "page": { "role": "neutral", "displayName": "Warm Off-White", "canonical": "#fbf7f1", "tonalRamp": ["#4a4338", "#6d6453", "#928771", "#b6ac98", "#d6cdbd", "#ece5d9", "#f4efe7", "#fbf7f1", "#fefdfb"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline and major brand moments. Playfair Display, ceiling ~3.75rem." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles. Playfair Display, text-wrap: balance." },
+      "title": { "displayName": "Title", "purpose": "Card titles, product names, value-prop headings. Nunito 800 — never Playfair." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs and helper text. Nunito, 65–75ch measure, Charcoal." },
+      "label": { "displayName": "Label", "purpose": "Badges and small functional labels. Nunito 900." }
+    },
+    "shadows": [
+      { "name": "soft-ambient", "value": "0 18px 50px rgb(51 51 51 / 0.08)", "purpose": "Hero brand panel, trust seal, sticky header — true brand focal points only." },
+      { "name": "hairline", "value": "0 1px 0 rgb(51 51 51 / 0.03)", "purpose": "Default content cards; the taupe border does the real separation." }
+    ],
+    "motion": [
+      { "name": "ui-transition", "value": "160ms ease", "purpose": "Default for background-color, border-color, color, and transform on links/buttons." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The request action — 'Request a booking', 'Continue on WhatsApp'. Marrakech Red, white text, fully pill.",
+      "html": "<button class=\"ds-btn-primary\">Request a booking</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.875rem; padding: 0.8rem 1.15rem; border: none; border-radius: 999px; background: var(--color-primary, #b94a48); color: #fff; font-family: Nunito, system-ui, sans-serif; font-size: 0.95rem; font-weight: 800; line-height: 1.2; cursor: pointer; transition: background-color 160ms ease, transform 160ms ease; } .ds-btn-primary:hover { background: #9f3d3b; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid #9f3d3b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Quieter action — 'Chat on WhatsApp'. Translucent white with taupe border; never a payment CTA.",
+      "html": "<button class=\"ds-btn-secondary\">Chat on WhatsApp</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 2.875rem; padding: 0.8rem 1.15rem; border: 1px solid rgb(168 158 148 / 0.45); border-radius: 999px; background: rgb(255 255 255 / 0.75); color: #333; font-family: Nunito, system-ui, sans-serif; font-size: 0.95rem; font-weight: 800; line-height: 1.2; cursor: pointer; transition: border-color 160ms ease, color 160ms ease, transform 160ms ease; } .ds-btn-secondary:hover { border-color: #b94a48; color: #b94a48; transform: translateY(-1px); } .ds-btn-secondary:focus-visible { outline: 2px solid #b94a48; outline-offset: 2px; }"
+    },
+    {
+      "name": "Service Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Availability / service state — always carries a text label, never color-only.",
+      "html": "<span class=\"ds-badge\">Personally confirmed</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 0.4rem 0.7rem; border-radius: 999px; background: rgb(185 74 72 / 0.1); color: #b94a48; font-family: Nunito, system-ui, sans-serif; font-size: 0.78rem; font-weight: 900; line-height: 1.2; }"
+    },
+    {
+      "name": "Sage Badge",
+      "kind": "chip",
+      "refersTo": "badge-sage",
+      "description": "Organic / premium-consumable cue only — used sparingly on Welcome Kits.",
+      "html": "<span class=\"ds-badge-sage\">Organic available</span>",
+      "css": ".ds-badge-sage { display: inline-flex; align-items: center; padding: 0.4rem 0.7rem; border-radius: 999px; background: rgb(143 161 138 / 0.18); color: #506549; font-family: Nunito, system-ui, sans-serif; font-size: 0.78rem; font-weight: 900; line-height: 1.2; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Default content surface — value props, steps, products. Flat with a hairline shadow and taupe border. Never nest cards.",
+      "html": "<article class=\"ds-card\"><span class=\"ds-badge\">Request to book</span><h3 class=\"ds-card-title\">Travel cot</h3><p class=\"ds-card-copy\">From 60 MAD/day. Cleaned, checked, and prepared before delivery.</p></article>",
+      "css": ".ds-card { background: #fff; border: 1px solid rgb(168 158 148 / 0.28); border-radius: 16px; padding: 1.25rem; box-shadow: 0 1px 0 rgb(51 51 51 / 0.03); } .ds-card .ds-badge { display: inline-flex; align-items: center; padding: 0.4rem 0.7rem; border-radius: 999px; background: rgb(185 74 72 / 0.1); color: #b94a48; font-family: Nunito, system-ui, sans-serif; font-size: 0.78rem; font-weight: 900; } .ds-card-title { margin: 1.25rem 0 0; font-family: Nunito, system-ui, sans-serif; font-size: 1.25rem; font-weight: 800; color: #333; } .ds-card-copy { margin: 0.75rem 0 0; font-family: Nunito, system-ui, sans-serif; font-size: 0.875rem; line-height: 1.5; color: rgb(51 51 51 / 0.72); }"
+    },
+    {
+      "name": "Category Tile",
+      "kind": "chip",
+      "refersTo": "card",
+      "description": "Light, tappable entry point into the catalogue. Pill, white, taupe border.",
+      "html": "<span class=\"ds-tile\">Travel cots</span>",
+      "css": ".ds-tile { display: inline-flex; align-items: center; padding: 0.75rem 0.95rem; border: 1px solid rgb(168 158 148 / 0.28); border-radius: 999px; background: #fff; color: #333; font-family: Nunito, system-ui, sans-serif; font-size: 0.92rem; font-weight: 800; transition: border-color 160ms ease, color 160ms ease; } .ds-tile:hover { border-color: #b94a48; color: #b94a48; }"
+    },
+    {
+      "name": "Step Number",
+      "kind": "custom",
+      "refersTo": "step-number",
+      "description": "Numbered marker for the How-It-Works sequence — legitimate because the steps are a real ordered flow.",
+      "html": "<span class=\"ds-step\">1</span>",
+      "css": ".ds-step { display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 999px; background: #b94a48; color: #fff; font-family: Nunito, system-ui, sans-serif; font-weight: 900; }"
+    },
+    {
+      "name": "Nav Link",
+      "kind": "nav",
+      "refersTo": "button-secondary",
+      "description": "Header navigation link. Nunito 800, muted charcoal, hover to red.",
+      "html": "<a href=\"#\" class=\"ds-nav-link\">How It Works</a>",
+      "css": ".ds-nav-link { color: rgb(51 51 51 / 0.75); font-family: Nunito, system-ui, sans-serif; font-size: 0.95rem; font-weight: 800; text-decoration: none; transition: color 160ms ease; } .ds-nav-link:hover { color: #b94a48; } .ds-nav-link:focus-visible { outline: 2px solid #b94a48; outline-offset: 2px; border-radius: 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Prepared Home",
+    "overview": "Hababy & Co should feel like walking into a calm, sunlit Rabat home where everything a family needs has already been cleaned, checked, and set out — before they arrived. The interface does the emotional work of lowering a tired parent's heart rate: warm off-white walls, soft sand-toned bands, generous air, and exactly one confident red voice that points to the next step. Nothing shouts; the premium signal is care, not luxury ornament. It rejects the marketplace, the toy shop, the SaaS dashboard, the gold-edged boutique, and the souvenir-stall tile. Moroccan heritage lives here as sense of place, never as decoration on top. The request-first model is presented as a feature: a real person is preparing this for your family.",
+    "keyCharacteristics": [
+      "Warm off-white canvas (#fbf7f1) with soft sand bands (#ead7c3) for sectioning — never stark white pages.",
+      "One bold voice: Marrakech Red (#b94a48) reserved for actions and key highlights only.",
+      "Editorial Playfair Display headings over practical Nunito body and UI.",
+      "Soft, generously-rounded surfaces; flat by default with one diffuse shadow for true brand moments.",
+      "Mobile-first, touch-first, calm — large tap targets, roomy spacing, no visual pressure."
+    ],
+    "rules": [
+      { "name": "The One Red Voice Rule", "body": "Marrakech Red carries actions and key highlights only. If two unrelated things on a screen are red, one of them is wrong. Warmth elsewhere comes from sand, rose, type, and imagery — never from spreading the accent.", "section": "colors" },
+      { "name": "The Fills-Are-Not-Text Rule", "body": "Rose Dust and Sand are never used as text on white — they fail contrast and read as washed-out. Taupe is for borders and captions, never running body copy. Body text is Charcoal, full stop.", "section": "colors" },
+      { "name": "The Playfair-Is-For-Moments Rule", "body": "Playfair Display appears at large sizes for headings and brand moments only. Small UI labels, helper text, dense product info, prices, forms, and admin tables are always Nunito. A serif price tag is a tell.", "section": "typography" },
+      { "name": "The Script-Is-A-Garnish Rule", "body": "Quicker Script is a single decorative word at most ('welcome home'), never a headline, price, button, label, or sentence. When in doubt, don't.", "section": "typography" },
+      { "name": "The Border-Before-Shadow Rule", "body": "Separation comes from the 1px taupe border and the tonal background shift first. Reach for Soft Ambient only when an element is a true brand focal point — never to make an ordinary card pop.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the page on warm off-white (#fbf7f1) and section with sand bands (#ead7c3) — never stark white full pages.",
+      "Do reserve Marrakech Red for actions and key highlights only (The One Red Voice Rule).",
+      "Do set body copy in Charcoal at ≥4.5:1 contrast; verify ink/72-style opacities still pass before shipping them.",
+      "Do use Playfair for headings/brand moments and Nunito for everything functional.",
+      "Do keep surfaces flat with a 1px taupe border; reserve the Soft Ambient shadow for true brand focal points.",
+      "Do give every interactive element a visible focus state and a prefers-reduced-motion fallback (WCAG 2.1 AA).",
+      "Do keep Moroccan inspiration subtle — the star mark and earthen warmth, not tiled backgrounds.",
+      "Do make availability and deposits explicit; clarity is the premium signal."
+    ],
+    "donts": [
+      "Don't use Rose Dust, Sand, or Taupe as text on white — fills and borders only; body text is Charcoal.",
+      "Don't make it look like a generic rental marketplace, a cartoonish toy shop, a cold SaaS dashboard / hero-metric template, a gold-edged luxury boutique, or a busy Moroccan-souvenir tile background.",
+      "Don't put a tiny uppercase tracked eyebrow above every section — find a different cadence.",
+      "Don't nest a card inside a card (the current hero stacks card-in-card — rework toward a single calm surface).",
+      "Don't use border-left/border-right colored side-stripes, gradient text, or decorative glassmorphism — ever.",
+      "Don't spread Marrakech Red across multiple unrelated elements on one screen.",
+      "Don't use checkout / payment language ('Book now', 'Buy now', 'Pay now', 'Instant checkout') or make availability feel uncertain.",
+      "Don't overuse Quicker Script, or set Playfair at small functional sizes."
+    ]
+  }
+}
