@@ -10,6 +10,11 @@ export type HomeProductSummary = {
   deposit_mad: number;
   availability_mode: string;
   display_order: number;
+  inventory_availability?: {
+    total_inventory_count: number;
+    usable_inventory_count: number;
+    has_usable_inventory: boolean;
+  };
 };
 
 type HomePageProps = {
@@ -81,6 +86,11 @@ const fallbackProducts: HomeProductSummary[] = [
     deposit_mad: 500,
     availability_mode: "request",
     display_order: 1,
+    inventory_availability: {
+      total_inventory_count: 0,
+      usable_inventory_count: 0,
+      has_usable_inventory: false,
+    },
   },
   {
     id: "fallback-compact-stroller",
@@ -91,6 +101,11 @@ const fallbackProducts: HomeProductSummary[] = [
     deposit_mad: 400,
     availability_mode: "request",
     display_order: 2,
+    inventory_availability: {
+      total_inventory_count: 0,
+      usable_inventory_count: 0,
+      has_usable_inventory: false,
+    },
   },
   {
     id: "fallback-infant-car-seat",
@@ -101,12 +116,17 @@ const fallbackProducts: HomeProductSummary[] = [
     deposit_mad: 500,
     availability_mode: "confirm",
     display_order: 3,
+    inventory_availability: {
+      total_inventory_count: 0,
+      usable_inventory_count: 0,
+      has_usable_inventory: false,
+    },
   },
 ];
 
 const availabilityLabels: Record<string, string> = {
-  request: "Request to book",
-  confirm: "Personally confirmed",
+  request: "Available to request",
+  confirm: "Available to request",
   on_request: "Available on request",
   hidden: "Hidden",
 };
@@ -142,14 +162,14 @@ function HeroSection() {
               height={24}
               className="h-6 w-6"
             />
-            Rabat pilot - personally confirmed
+            Rabat pilot - availability checked
           </div>
           <h1 className="mt-6 max-w-3xl font-heading text-4xl leading-tight text-ink sm:text-5xl lg:text-6xl">
             Baby gear rental in Rabat, delivered before you arrive.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/78">
             Travel lighter with clean, carefully prepared baby and toddler
-            essentials, personally confirmed before every delivery.
+            essentials, reviewed before every delivery.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href="#request" className="btn btn-primary">
@@ -265,26 +285,44 @@ function ProductPreviewSection({
           ) : null}
           <div className="grid gap-4 md:grid-cols-3">
             {products.map((product) => (
-              <article key={product.id} className="card">
-                <span className="badge">
-                  {availabilityLabels[product.availability_mode] ?? "Request to book"}
-                </span>
-                <h3 className="mt-5 text-xl font-extrabold text-ink">{product.name}</h3>
-                <p className="mt-3 text-sm text-ink/70">
-                  From {product.daily_price_mad} MAD/day
-                </p>
-                <p className="mt-1 text-sm text-ink/70">
-                  Deposit estimate: {product.deposit_mad} MAD
-                </p>
-                <Link href="#request" className="mt-5 inline-flex text-sm font-extrabold text-primary">
-                  Request this item
-                </Link>
-              </article>
+              <HomeProductCard key={product.id} product={product} />
             ))}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function HomeProductCard({ product }: { product: HomeProductSummary }) {
+  const hasUsableInventory =
+    product.inventory_availability?.has_usable_inventory ?? false;
+
+  return (
+    <article className="card">
+      <span className={hasUsableInventory ? "badge" : "badge badge-soft"}>
+        {hasUsableInventory
+          ? availabilityLabels[product.availability_mode] ?? "Available to request"
+          : "Currently unavailable"}
+      </span>
+      <h3 className="mt-5 text-xl font-extrabold text-ink">{product.name}</h3>
+      <p className="mt-3 text-sm text-ink/70">From {product.daily_price_mad} MAD/day</p>
+      <p className="mt-1 text-sm text-ink/70">
+        Deposit estimate: {product.deposit_mad} MAD
+      </p>
+      {hasUsableInventory ? (
+        <Link
+          href="/#request"
+          className="mt-5 inline-flex text-sm font-extrabold text-primary"
+        >
+          Request this item
+        </Link>
+      ) : (
+        <span className="mt-5 inline-flex text-sm font-extrabold text-ink/55">
+          Requests paused
+        </span>
+      )}
+    </article>
   );
 }
 
@@ -308,13 +346,13 @@ function TrustSection() {
           <SectionIntro
             eyebrow="Trust and safety"
             title="Prepared with care, checked like a parent would."
-            copy="Cleanliness, fit, and safety-sensitive details matter. Car seats require child age, weight, and height details so suitability can be personally confirmed before handover."
+            copy="Cleanliness, condition, and safety-sensitive details matter. For car seats, parents choose the appropriate group from the listed specifications; Hababy & Co confirms stock, cleaning, dates, and delivery feasibility before handover."
           />
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
               "Cleaned and inspected before delivery",
               "Textiles washed between rentals",
-              "Safety-sensitive items personally confirmed",
+              "Safety-sensitive items reviewed before handover",
               "Prepared before your family arrives",
             ].map((item) => (
               <div key={item} className="promise-item">

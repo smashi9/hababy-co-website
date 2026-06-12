@@ -139,6 +139,30 @@ Do not build complex automated inventory allocation, customer accounts, online p
 
 The backend should be strong enough for the pilot, but not over-engineered.
 
+## 6. Availability check before request
+
+The public catalogue should be availability-aware at the product level.
+
+If a product has at least one usable stock unit, the customer may request it.
+
+If a product has zero usable stock units, the customer cannot request it and the UI should show:
+
+```text
+Currently unavailable
+```
+
+Usable inventory means:
+
+```text
+status = available
+cleaning_status = clean
+current_order_id is null
+```
+
+This is not full automated date-based allocation. It is a simple product-level gate before the request-first flow.
+
+Even when usable stock exists, the request remains pending. Hababy & Co still confirms item condition, cleanliness, requested dates, delivery feasibility, payment/deposit, and handover details before approval.
+
 ## Supabase Services Used
 
 Use Supabase for:
@@ -315,7 +339,7 @@ Customer-facing labels:
 
 ```text
 request = Request to book
-confirm = Personally confirmed
+confirm = Available to request
 on_request = Available on request
 hidden = Hidden
 ```
@@ -334,7 +358,7 @@ Admin should be able to:
 * Edit included items
 * Edit optional accessories
 * Edit safety notes
-* Mark whether child details are required
+* Edit age, weight, height, and specification guidance
 * Change availability mode
 * Toggle model image note
 
@@ -683,11 +707,30 @@ maintenance_needed
 
 ## Version 1 Inventory Rule
 
-Do not build complex automatic availability logic in Version 1.
+Version 1 should not build complex automated date-based inventory allocation.
 
-Availability should remain request-first.
+However, the public catalogue should use a simple product-level availability check.
 
-Inventory can help the owner track physical items later.
+Usable inventory means:
+
+```text
+status = available
+cleaning_status = clean
+current_order_id is null
+```
+
+Catalogue behavior:
+
+```text
+At least one usable stock unit = customer may request the product
+Zero usable stock units = product shows Currently unavailable and cannot be requested
+```
+
+This gate only decides whether a request can be started. It does not confirm the booking.
+
+After a request, Hababy & Co still confirms item condition, cleanliness, requested dates, delivery feasibility, payment/deposit, and handover details before approval.
+
+Inventory also helps the owner track physical items later.
 
 ## Table 9 — settings
 
@@ -1229,6 +1272,12 @@ Baby bath
 Changing mat
 ```
 
+For car seats, size/weight groups should be treated as separate requestable products where possible, such as infant car seat and toddler car seat.
+
+Parents are responsible for choosing the appropriate car seat group based on listed specifications.
+
+Hababy & Co does not confirm child suitability. Hababy & Co confirms stock, item condition, cleanliness, requested dates, and delivery feasibility.
+
 ## Suggested Seed Bundles
 
 ```text
@@ -1432,6 +1481,8 @@ The backend plan is acceptable when:
 
 * Supabase is the source of truth for products, bundles, Welcome Kits, customers, orders, settings, and content.
 * Public visitors can browse active catalogue data.
+* Public product catalogue CTAs are based on usable stock.
+* Products with zero usable stock show `Currently unavailable` and cannot be requested.
 * Customers can submit request-first booking requests.
 * Orders are saved with status `new`.
 * Same-day requests are blocked by default.

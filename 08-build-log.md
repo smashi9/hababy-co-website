@@ -1247,3 +1247,88 @@ The catalogue CTAs remain placeholders that guide users toward the request-first
 **Next action:**
 
 Human visual review of `/products` and `/products/[slug]`, then build the actual request-to-book flow in a later milestone.
+
+## Entry 032 — Catalogue Inventory Gate Added
+
+**Date:** 12 June 2026
+
+**Tool used:** Codex / Next.js / Supabase read queries
+
+**Task attempted:** Make the public catalogue inventory-aware before building the request flow.
+
+**What was done:**
+
+* Inspected the existing inventory schema in `001_initial_schema.sql`.
+* Confirmed the schema supports product-level inventory availability through:
+  * `inventory.product_id`
+  * `inventory.status`
+  * `inventory.cleaning_status`
+  * `inventory.current_order_id`
+* Extended Supabase read queries so product summaries and details include a simple inventory availability summary.
+* Kept raw inventory rows server-only; the UI receives only counts and requestability.
+* Updated `/products` cards to show:
+  * `Available to request`
+  * `Available on request`
+  * `Currently unavailable`
+* Updated product detail pages with the same availability check.
+* Replaced request CTAs with `Currently unavailable` when usable stock count is zero.
+* Updated homepage product previews to respect the same availability check.
+* Updated car seat wording so parents are responsible for choosing the appropriate car seat group from listed specifications.
+* Removed public-facing wording that implied Hababy & Co confirms child suitability.
+* Created a draft inventory seed file:
+
+```text
+hababy-site/supabase/sql/003_seed_inventory.sql
+```
+
+* Marked the inventory seed file as review-before-run and development/testing only.
+* Did not run SQL.
+* Did not modify existing Supabase SQL files.
+* Did not touch `.env.local`.
+* Did not add booking flow, admin pages, or online payment.
+* Preserved `/supabase-test`.
+
+**Availability rule added in app code:**
+
+```text
+usable stock =
+  status = 'available'
+  and cleaning_status = 'clean'
+  and current_order_id is null
+```
+
+**Result:**
+
+The catalogue now has two separate gates:
+
+* Availability check: products with no usable stock cannot be requested.
+* Owner confirmation/QC step: products with usable stock still require Hababy & Co confirmation before approval.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+```
+
+Both passed.
+
+**Next action:**
+
+Human should review `003_seed_inventory.sql`, then decide whether to run it in a disposable Supabase project before applying it to the real project.
+
+**Follow-up documentation note:**
+
+After the product owner confirmed that the catalogue should be availability-aware, the planning documents were updated to make this a formal Version 1 rule:
+
+* `01-product-requirements.md`
+* `06-backend-plan.md`
+* `07-test-plan.md`
+* `11-change-log.md`
+
+The old planning language that treated catalogue availability as request-first only has been replaced with the two-gate model:
+
+```text
+availability check first
+then owner confirmation/QC before approval
+```

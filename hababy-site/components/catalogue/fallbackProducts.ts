@@ -14,7 +14,7 @@ const fallbackDetails: ProductDetail[] = [
     deposit_mad: 500,
     included_items: ["Travel cot frame", "Mattress pad", "Carry bag"],
     optional_accessories: [],
-    safety_notes: "Follow manufacturer age and weight limits. Final suitability is confirmed before handover.",
+    safety_notes: "Follow manufacturer age and weight limits. Condition and cleanliness are reviewed before handover.",
     cleaning_notes: "Cleaned, checked, and prepared before delivery.",
     age_guidance: "Newborn to about 3 years",
     weight_guidance: "Up to about 15 kg",
@@ -23,6 +23,11 @@ const fallbackDetails: ProductDetail[] = [
     availability_mode: "request",
     model_image_note: true,
     display_order: 1,
+    inventory_availability: {
+      total_inventory_count: 0,
+      usable_inventory_count: 0,
+      has_usable_inventory: false,
+    },
   },
   {
     id: "fallback-compact-stroller",
@@ -46,13 +51,18 @@ const fallbackDetails: ProductDetail[] = [
     availability_mode: "request",
     model_image_note: true,
     display_order: 2,
+    inventory_availability: {
+      total_inventory_count: 0,
+      usable_inventory_count: 0,
+      has_usable_inventory: false,
+    },
   },
   {
     id: "fallback-infant-car-seat",
     name: "Infant car seat",
     slug: "infant-car-seat",
     description:
-      "Development preview: rear-facing infant car seat request. Child details are required so suitability can be personally confirmed.",
+      "Development preview: rear-facing infant car seat request. Parents select the appropriate car seat group using the listed specifications.",
     image_gallery: [],
     daily_price_mad: 50,
     weekly_price_mad: 250,
@@ -61,15 +71,20 @@ const fallbackDetails: ProductDetail[] = [
     included_items: ["Infant car seat", "Base if available"],
     optional_accessories: [],
     safety_notes:
-      "Child age, approximate weight, and height are required. Fitting and suitability are personally confirmed before handover.",
+      "Parents are responsible for choosing the appropriate car seat group based on the listed age, weight, height, and manufacturer guidance.",
     cleaning_notes: "Cleaned and inspected before each rental.",
     age_guidance: "Newborn to about 12 months",
     weight_guidance: "About 0-13 kg",
-    height_guidance: "Requested before confirmation when relevant",
+    height_guidance: "Check the listed manufacturer guidance before requesting",
     requires_child_details: true,
     availability_mode: "confirm",
     model_image_note: true,
     display_order: 3,
+    inventory_availability: {
+      total_inventory_count: 0,
+      usable_inventory_count: 0,
+      has_usable_inventory: false,
+    },
   },
 ];
 
@@ -85,6 +100,7 @@ export const fallbackProductSummaries: ProductSummary[] = fallbackDetails.map(
     weekly_price_mad,
     deposit_mad,
     availability_mode,
+    inventory_availability,
     display_order,
   }) => ({
     id,
@@ -95,6 +111,7 @@ export const fallbackProductSummaries: ProductSummary[] = fallbackDetails.map(
     weekly_price_mad,
     deposit_mad,
     availability_mode,
+    inventory_availability,
     display_order,
   })
 );

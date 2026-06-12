@@ -2,14 +2,25 @@ import Link from "next/link";
 import type { ProductDetail as ProductDetailType } from "@/lib/supabase/queries";
 
 const availabilityLabels: Record<string, string> = {
-  request: "Request to book",
-  confirm: "Personally confirmed",
+  request: "Available to request",
+  confirm: "Available to request",
   on_request: "Available on request",
   hidden: "Hidden",
 };
 
 function cleanText(value: string | null | undefined) {
-  return value?.replace(/^PLACEHOLDER:\s*/i, "") ?? null;
+  return (
+    value
+      ?.replace(/^PLACEHOLDER:\s*/i, "")
+      .replace(
+        /Personally\s+confirmed for safety before delivery\.?/gi,
+        "Stock, item condition, cleanliness, requested dates, and delivery feasibility are confirmed before handover."
+      )
+      .replace(
+        /Fitting and suitability personally\s+confirmed before handover\.?/gi,
+        "Parents select the appropriate car seat group from the listed specifications."
+      ) ?? null
+  );
 }
 
 function DetailList({ title, items }: { title: string; items: string[] }) {
@@ -34,8 +45,13 @@ function DetailList({ title, items }: { title: string; items: string[] }) {
 
 export function ProductDetail({ product }: { product: ProductDetailType }) {
   const description = cleanText(product.description);
-  const availabilityLabel =
-    availabilityLabels[product.availability_mode] ?? "Request to book";
+  const safetyNotes = product.requires_child_details
+    ? "Parents are responsible for choosing the appropriate car seat group based on the listed specifications. Hababy & Co confirms stock, item condition, cleanliness, requested dates, and delivery feasibility before handover."
+    : cleanText(product.safety_notes);
+  const hasUsableInventory = product.inventory_availability.has_usable_inventory;
+  const availabilityLabel = hasUsableInventory
+    ? availabilityLabels[product.availability_mode] ?? "Available to request"
+    : "Currently unavailable";
   const guidance = [
     product.age_guidance ? `Age: ${cleanText(product.age_guidance)}` : null,
     product.weight_guidance ? `Weight: ${cleanText(product.weight_guidance)}` : null,
@@ -67,9 +83,11 @@ export function ProductDetail({ product }: { product: ProductDetailType }) {
               Back to all products
             </Link>
             <div className="mt-5 flex flex-wrap gap-3">
-              <span className="badge">{availabilityLabel}</span>
+              <span className={hasUsableInventory ? "badge" : "badge badge-soft"}>
+                {availabilityLabel}
+              </span>
               {product.requires_child_details ? (
-                <span className="badge badge-soft">Child details required</span>
+                <span className="badge badge-soft">Car seat specifications</span>
               ) : null}
             </div>
             <h1 className="mt-5 max-w-3xl font-heading text-4xl leading-tight text-ink sm:text-5xl">
@@ -77,18 +95,26 @@ export function ProductDetail({ product }: { product: ProductDetailType }) {
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/76">
               {description ??
-                "Clean, checked baby gear prepared for your Rabat stay and personally confirmed before handover."}
+                "Clean, checked baby gear prepared for your Rabat stay and reviewed before handover."}
             </p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              <Link href="/#request" className="btn btn-primary">
-                Request a booking
-              </Link>
+              {hasUsableInventory ? (
+                <Link href="/#request" className="btn btn-primary">
+                  Request a booking
+                </Link>
+              ) : (
+                <span className="btn border border-taupe/35 bg-page text-ink/55">
+                  Currently unavailable
+                </span>
+              )}
               <Link href="/#contact" className="btn btn-secondary">
                 Chat on WhatsApp
               </Link>
             </div>
             <p className="mt-5 max-w-2xl text-sm leading-6 text-ink/70">
-              This is not an instant booking. We confirm availability, delivery timing, and payment/deposit details before handover.
+              This is not an instant booking. If inventory is available to request,
+              Hababy & Co still confirms item condition, cleanliness, requested
+              dates, delivery feasibility, and payment/deposit details before handover.
             </p>
           </div>
         </div>
@@ -133,13 +159,22 @@ export function ProductDetail({ product }: { product: ProductDetailType }) {
           <section className="card">
             <h2 className="text-xl font-extrabold text-ink">Availability</h2>
             <p className="mt-4 text-sm leading-6 text-ink/72">
-              Availability is personally confirmed after you send a request. We do not promise instant confirmation.
+              {hasUsableInventory
+                ? "This product is available to request. The request still stays pending until Hababy & Co confirms stock, condition, cleaning, dates, delivery feasibility, and handover details."
+                : "This product is currently unavailable, so requests are paused until a clean available unit is added."}
+            </p>
+            <p className="mt-4 rounded-2xl bg-page px-4 py-3 text-sm font-bold text-ink/72">
+              {hasUsableInventory
+                ? `${product.inventory_availability.usable_inventory_count} available unit${
+                    product.inventory_availability.usable_inventory_count === 1 ? "" : "s"
+                  }`
+                : "No available units"}
             </p>
           </section>
           <section className="card">
             <h2 className="text-xl font-extrabold text-ink">Safety notes</h2>
             <p className="mt-4 text-sm leading-6 text-ink/72">
-              {cleanText(product.safety_notes) ??
+              {safetyNotes ??
                 "The item is checked before delivery and prepared according to its care requirements."}
             </p>
           </section>
@@ -156,13 +191,22 @@ export function ProductDetail({ product }: { product: ProductDetailType }) {
       {product.requires_child_details ? (
         <section className="section bg-sand/55">
           <div className="rounded-[1.5rem] border border-taupe/25 bg-white p-6 sm:p-8">
-            <h2 className="font-heading text-3xl text-ink">For car seats, we need child details first.</h2>
+            <h2 className="font-heading text-3xl text-ink">For car seats, choose the right group carefully.</h2>
             <p className="mt-4 max-w-3xl text-base leading-7 text-ink/74">
-              Please include child age, approximate weight, height if relevant, and number of children when you request. Hababy & Co checks suitability before confirming the item.
+              Parents are responsible for selecting the appropriate car seat group
+              based on the listed age, weight, height, and manufacturer guidance.
+              Hababy & Co confirms stock, item condition, cleanliness, requested
+              dates, and delivery feasibility before handover.
             </p>
-            <Link href="/#request" className="btn btn-primary mt-6">
-              Request a booking
-            </Link>
+            {hasUsableInventory ? (
+              <Link href="/#request" className="btn btn-primary mt-6">
+                Request a booking
+              </Link>
+            ) : (
+              <span className="btn mt-6 border border-taupe/35 bg-page text-ink/55">
+                Currently unavailable
+              </span>
+            )}
           </div>
         </section>
       ) : null}

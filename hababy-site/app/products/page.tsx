@@ -40,19 +40,22 @@ export default async function ProductsPage() {
               Browse the first Hababy & Co rental catalogue.
             </h1>
             <p className="mt-5 text-lg leading-8 text-ink/76">
-              Choose what your family needs for Rabat, then send a request. We confirm availability, delivery timing, and payment/deposit details before handover.
+              Choose what your family needs for Rabat, then send a request when
+              usable stock exists. Hababy & Co still confirms item condition,
+              cleanliness, requested dates, delivery feasibility, and payment/deposit
+              details before handover.
             </p>
           </div>
 
           <div className="mt-8 grid gap-4 rounded-[1.5rem] border border-taupe/25 bg-white p-5 text-sm leading-6 text-ink/72 md:grid-cols-3">
             <p>
+              <strong className="text-ink">Availability check:</strong> products with no clean available units cannot be requested.
+            </p>
+            <p>
               <strong className="text-ink">Request-first:</strong> submitting interest does not instantly confirm a booking.
             </p>
             <p>
-              <strong className="text-ink">Personally checked:</strong> availability and delivery are confirmed within 24 hours.
-            </p>
-            <p>
-              <strong className="text-ink">Offline payment:</strong> payment/deposit are arranged before handover.
+              <strong className="text-ink">Personally checked:</strong> condition, cleaning, dates, delivery, and payment/deposit are confirmed before handover.
             </p>
           </div>
         </div>

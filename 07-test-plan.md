@@ -131,6 +131,39 @@ Customer is asked to pay online
 Availability appears guaranteed without review
 ```
 
+## Rule 1A — Availability check before request
+
+The catalogue must not let customers request products with zero usable stock.
+
+Usable inventory means:
+
+```text
+status = available
+cleaning_status = clean
+current_order_id is null
+```
+
+Expected behavior:
+
+* Product has at least one usable stock unit -> customer may click `Request a booking`.
+* Product has zero usable stock units -> customer sees `Currently unavailable`.
+* Products with zero usable units do not show an active request CTA.
+* A requestable product still does not imply instant confirmation.
+
+Pass condition:
+
+```text
+Inventory controls whether the customer may request the product, and Hababy & Co still confirms condition, cleanliness, requested dates, delivery feasibility, payment/deposit, and handover details before approval.
+```
+
+Fail examples:
+
+```text
+Product with no usable stock can still be requested
+Product with usable stock says confirmed or guaranteed
+Unavailable product shows a live request CTA
+```
+
 ## Rule 2 — No same-day orders
 
 Same-day delivery is not available by default.
@@ -310,6 +343,8 @@ Test that the Rent Baby Gear page includes:
 [ ] Starting price in MAD
 [ ] Availability badge
 [ ] View/request CTA
+[ ] Currently unavailable state for products with zero usable stock
+[ ] No active request CTA for products with zero usable stock
 [ ] Category filter
 [ ] Date/rental filter if implemented
 ```
@@ -317,7 +352,7 @@ Test that the Rent Baby Gear page includes:
 Pass condition:
 
 ```text
-A visitor can browse rental gear and move to product details easily.
+A visitor can browse rental gear, move to product details easily, and only request products with usable stock.
 ```
 
 ## Product Detail Page Tests
@@ -339,19 +374,43 @@ Each product detail page should show:
 [ ] Cleaning notes
 [ ] Availability badge
 [ ] Request CTA
+[ ] Currently unavailable state when usable stock is zero
 [ ] Model image note if relevant
 ```
 
-For car seats or carriers:
+For car seats:
 
 ```text
-[ ] Child age/weight/height requirements are clearly indicated
+[ ] Car seat age/weight/height/specification guidance is clearly indicated
+[ ] Separate car seat size/weight groups appear as separate requestable products where possible
+[ ] Copy says parents are responsible for choosing the appropriate car seat group
+[ ] Copy does not say Hababy confirms child suitability
+[ ] Copy says Hababy confirms stock, condition, cleanliness, dates, and delivery feasibility
 ```
 
 Pass condition:
 
 ```text
 The customer understands the item, price estimate, deposit, and request process.
+```
+
+## Inventory Availability Tests
+
+Create or use test products with the following inventory states:
+
+```text
+[ ] status available + cleaning_status clean + current_order_id null -> product can be requested
+[ ] status available + cleaning_status needs_cleaning -> product shows Currently unavailable
+[ ] status cleaning + cleaning_status clean -> product shows Currently unavailable
+[ ] status maintenance + cleaning_status maintenance_needed -> product shows Currently unavailable
+[ ] status available + cleaning_status clean + current_order_id set -> product shows Currently unavailable
+[ ] no inventory rows -> product shows Currently unavailable
+```
+
+Pass condition:
+
+```text
+Only products with at least one usable stock unit show an active Request a booking CTA.
 ```
 
 ## Bundles Page Tests
@@ -536,9 +595,11 @@ Test fields:
 Conditional requirement test:
 
 ```text
-[ ] If car seat is selected, baby details are required
-[ ] If carrier is selected, baby details are required
-[ ] If no safety-sensitive item is selected, baby details can be lighter
+[ ] Car seat product pages show clear age/weight/height/specification guidance before request
+[ ] Car seat request does not require child details before the customer can submit interest
+[ ] Parents are told they are responsible for choosing the appropriate car seat group
+[ ] Hababy does not claim to confirm child suitability
+[ ] If child details are collected later, they support communication and do not replace parent responsibility
 ```
 
 ## Step 3 — Items
@@ -782,7 +843,7 @@ WhatsApp is a communication handoff, not the database of record.
 [ ] Admin can edit deposit
 [ ] Admin can edit included items
 [ ] Admin can edit safety notes
-[ ] Admin can set child-details requirement
+[ ] Admin can edit age, weight, height, and specification guidance
 [ ] Admin can set availability mode
 [ ] Admin can toggle model-image note
 ```
@@ -1270,9 +1331,12 @@ I need a car seat for my baby.
 Test:
 
 ```text
-[ ] Does the site ask for baby age/weight/height?
+[ ] Does the site show car seat age/weight/height/specification guidance?
+[ ] Does the site make parents responsible for choosing the appropriate car seat group?
+[ ] Does the site avoid saying Hababy confirms child suitability?
+[ ] Does the site show whether that car seat group has usable stock?
 [ ] Does it avoid promising instant availability?
-[ ] Does it explain personal confirmation?
+[ ] Does it explain Hababy confirms stock, condition, cleanliness, dates, and delivery feasibility?
 ```
 
 ## Scenario 5 — Same-Day Request
@@ -1323,6 +1387,7 @@ The site should not launch if any of these are true:
 ```text
 [ ] Booking requests do not save
 [ ] Same-day requests are not blocked
+[ ] Products with zero usable stock can be requested
 [ ] Online payment appears anywhere
 [ ] Admin routes are publicly accessible
 [ ] Customer personal data is exposed
@@ -1367,6 +1432,7 @@ Before launch, confirm:
 This test plan is complete enough when it can verify:
 
 * The customer-facing site works.
+* The catalogue only allows requests for products with usable stock.
 * The booking request flow works.
 * Same-day delivery is blocked by default.
 * No online payment exists.

@@ -72,7 +72,7 @@ The business is premium and parent-led. The website should make manual confirmat
 Use language such as:
 
 ```text
-Personally confirmed
+Personally reviewed
 Cleaned and checked
 Confirmed within 24 hours
 ```
@@ -249,7 +249,7 @@ The homepage should communicate:
 * Clean and inspected gear
 * Delivered before arrival
 * Local and accountable service
-* Personally confirmed requests
+* Personally reviewed requests
 
 ### How It Works Requirements
 
@@ -315,6 +315,28 @@ Availability badge
 View & request button
 ```
 
+### Inventory Availability Rule
+
+The catalogue now has an availability check before the request-first confirmation step.
+
+If a product has at least one usable stock unit, the customer may request it.
+
+If a product has zero usable stock units, the customer cannot request it and the UI should show:
+
+```text
+Currently unavailable
+```
+
+Usable stock means:
+
+```text
+status = available
+cleaning_status = clean
+current_order_id is null
+```
+
+This availability check does not make the booking instant or guaranteed. A request is still pending until Hababy & Co confirms stock, item condition, cleanliness, requested dates, delivery feasibility, payment/deposit, and handover details.
+
 ### Filters
 
 The catalogue should allow filtering by:
@@ -324,7 +346,7 @@ Category
 Rental date range
 ```
 
-The date filter does not need to guarantee live inventory availability in Version 1. It should support the request-first model.
+The date filter does not need to become a full automated inventory allocation system in Version 1. However, the catalogue should still use product-level inventory availability to decide whether the customer can request a product at all.
 
 ## 3. Product Detail Page
 
@@ -364,16 +386,22 @@ Model image; exact item confirmed before delivery.
 
 ### Product Safety Requirement
 
-For car seats and carriers, child details must be collected before request submission.
+For car seats, different size/weight groups should be treated as separate requestable product options where possible.
 
-Relevant fields may include:
+Product detail pages must clearly display:
 
 ```text
-Child age
-Approximate weight
-Height if relevant
-Number of children
+Age guidance
+Weight guidance
+Height guidance if relevant
+Specification/manufacturer guidance where available
 ```
+
+Parents are responsible for choosing the appropriate car seat group based on the listed specifications.
+
+Hababy & Co does not confirm child suitability.
+
+Hababy & Co confirms stock, item condition, cleanliness, requested dates, delivery feasibility, payment/deposit, and handover details before approval.
 
 ## 4. Bundles Page
 
@@ -572,7 +600,7 @@ There should be no online payment.
 
 ## Step 1 — Dates and Delivery
 
-Collect:
+The booking flow may collect:
 
 ```text
 Rental start date
@@ -624,12 +652,17 @@ Height if relevant
 Number of children
 ```
 
-These fields should be required when the selected items include:
+For car seats, these details should support communication but should not replace the parent's responsibility to choose the appropriate car seat group from the listed specifications.
+
+Car seat requests should not be blocked only because child details have not yet been entered.
+
+Safety-sensitive products should instead show clear specification guidance before request:
 
 ```text
-Car seat
-Carrier
-Other safety-sensitive item
+Age guidance
+Weight guidance
+Height guidance if relevant
+Manufacturer/specification guidance where available
 ```
 
 ## Step 3 — Items
@@ -840,10 +873,30 @@ Availability modes:
 
 ```text
 Request to book
-Personally confirmed
+Personally reviewed
 Available on request
 Hidden
 ```
+
+For individual products, this availability mode is not the only availability signal shown to customers.
+
+The public product catalogue should also calculate whether usable stock exists:
+
+```text
+usable stock =
+  status = available
+  and cleaning_status = clean
+  and current_order_id is null
+```
+
+Customer-facing behavior:
+
+```text
+At least one usable stock unit = product may show a request CTA
+Zero usable stock units = product shows Currently unavailable and cannot be requested
+```
+
+Owner confirmation still happens after the customer request. Hababy & Co still confirms condition, cleanliness, requested dates, delivery feasibility, payment/deposit, and handover details before approval.
 
 ## Availability Messaging
 
@@ -852,9 +905,10 @@ Use availability messaging to support trust and quality.
 Recommended labels:
 
 ```text
-Request to book
-Personally confirmed
+Available to request
+Personally reviewed
 Available on request
+Currently unavailable
 ```
 
 Avoid:
@@ -893,7 +947,7 @@ The admin should allow the owner to:
 * Edit included items
 * Edit optional add-ons
 * Edit safety notes
-* Set whether child details are required
+* Edit age, weight, height, and specification guidance
 * Set availability mode
 * Toggle model-image note
 
@@ -1068,7 +1122,8 @@ The product is acceptable when:
 * Customers can browse rental products.
 * Customers can browse bundles.
 * Customers can browse Welcome Kits.
-* Customers can request a booking.
+* Customers can request a booking only for products with usable stock.
+* Products with zero usable stock show `Currently unavailable`.
 * The booking flow is request-first, not instant purchase.
 * Confirmation says availability and delivery will be confirmed within 24 hours.
 * Deliveries less than 24 hours away are blocked.

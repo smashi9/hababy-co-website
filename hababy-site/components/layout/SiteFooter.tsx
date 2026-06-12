@@ -27,7 +27,7 @@ export function SiteFooter() {
           />
           <p className="mt-4 max-w-sm text-sm leading-6 text-ink/75">
             Parent-led baby gear rental in Rabat, prepared with care and
-            personally confirmed before delivery.
+            reviewed before delivery.
           </p>
           <p className="mt-4 text-sm font-semibold text-primary">
             Rabat-only pilot. More areas can wait until the service is ready.
