@@ -1107,3 +1107,41 @@ Claude Code = review
 Impeccable = design critique / polish guidance
 ChatGPT = workflow guide
 Human = approval and testing
+
+## Entry 029 — Impeccable Homepage Critique Completed
+
+**Date:** 12 June 2026
+
+**Tool used:** Impeccable / Claude Code / ChatGPT guidance
+
+**Task attempted:** Run a design critique of the first branded Hababy & Co homepage foundation.
+
+**What was done:**
+
+- Ran `/impeccable critique homepage`.
+- Reviewed the current homepage against the product/design system.
+- Received a design health score of `30/40`.
+- Confirmed that the homepage is functional, on-brand, and request-first, but still reads as somewhat generic or AI-generated.
+- Identified the main design issues:
+  - repeated uppercase eyebrow labels across too many sections
+  - no real imagery
+  - visible placeholder/duplicate copy
+  - mobile navigation disappears below desktop
+  - nested card structure in the hero
+  - monotonous section rhythm
+- Selected the critique intent:
+  - lead with escaping the template look
+  - preserve the brand palette
+  - create a plan only, then trigger fixes one by one
+
+**Important decision:**
+
+The current homepage should not be discarded. The brand direction is correct, but the design craft needs elevation.
+
+**Lesson learned:**
+
+A site can be technically correct and still feel generic. Design critique tools help turn vague discomfort into specific, actionable fixes.
+
+**Next action:**
+
+Run `/impeccable typeset homepage` first to reduce the repeated eyebrow/template look before making larger layout or imagery changes.
