@@ -1145,3 +1145,51 @@ A site can be technically correct and still feel generic. Design critique tools 
 **Next action:**
 
 Run `/impeccable typeset homepage` first to reduce the repeated eyebrow/template look before making larger layout or imagery changes.
+
+## Entry 030 — Design Automation Experiment Paused and Build Track Refocused
+
+**Date:** 12 June 2026
+
+**Tool used:** Impeccable / Codex / VS Code / ChatGPT guidance
+
+**Task attempted:** Use Impeccable and Codex to improve the visual craft of the first branded Hababy & Co homepage after the homepage felt too generic.
+
+**What was done:**
+
+* Installed and initialized Impeccable as a design QA layer.
+* Created design-system support files:
+
+  * `PRODUCT.md`
+  * `DESIGN.md`
+  * `.impeccable/design.json`
+  * `.claude/skills/impeccable/`
+* Ran an Impeccable critique of the homepage.
+* Impeccable identified that the homepage was technically functional and on-brand, but still felt generic/template-like.
+* Attempted a first typesetting/design refinement pass.
+* Attempted a broader Codex homepage craft pass based on the Impeccable critique.
+* Visually reviewed the result and decided the automated design changes were not good enough.
+* Decided not to continue the visual redesign loop for now.
+
+**Result:**
+
+* The automated design refinement did not produce an acceptable visual result.
+* The latest unwanted design changes should be reverted or left uncommitted.
+* The project will return to the functional build track instead of continuing homepage design polish immediately.
+
+**Important decision:**
+
+Design perfection will be paused for now.
+
+The project will continue building core website functionality first, including catalogue structure, product pages, and request-first flow foundations.
+
+Visual design can be revisited later with better assets, clearer references, and a more deliberate design pass.
+
+**Lesson learned:**
+
+Design critique tools can be useful for identifying why a page feels generic, but automated design fixes are not always good enough.
+
+For this project, Impeccable is useful as a critique and diagnosis layer, but final design taste still requires human judgement and stronger visual direction.
+
+**Next action:**
+
+Revert any unwanted uncommitted design changes, confirm the app still builds, and continue with the next functional milestone: catalogue foundation and product pages.
