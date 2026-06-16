@@ -147,3 +147,35 @@ Owner confirmation/QC gate:
 **Car seat clarification:** Car seat size/weight groups should be separate requestable products where possible. Parents choose the appropriate group from listed specifications. Hababy does not confirm child suitability.
 
 **Status:** Accepted
+
+## Change 006 — Request Flow Foundation Added
+
+**Date:** 16 June 2026
+
+**Change type:** Product behavior / customer journey
+
+**Summary:** Added the first public request flow foundation at `/request`.
+
+**Reason:** Customers need a clear way to request available products after browsing the catalogue and product detail pages, while preserving the request-first pilot model.
+
+**Files affected:**
+
+* `hababy-site/app/request/page.tsx`
+* `hababy-site/components/request/RequestForm.tsx`
+* `hababy-site/components/catalogue/ProductCard.tsx`
+* `hababy-site/components/catalogue/ProductDetail.tsx`
+* `hababy-site/components/home/HomePage.tsx`
+* `hababy-site/components/layout/SiteHeader.tsx`
+* `hababy-site/components/layout/SiteFooter.tsx`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Product request CTAs now route to `/request?product=<slug>` only when the product has usable inventory. Unavailable products remain blocked and do not allow request submission.
+
+**Same-day decision:** Same-day requests and requests less than 24 hours away are blocked in the UI during the pilot.
+
+**Persistence decision:** This milestone is UI-only. Requests are not saved to Supabase yet. Validated order saving should be handled in a later backend milestone after schema, validation, security, and RLS review.
+
+**Payment decision:** The request flow records only an offline payment preference. It does not include online payment, checkout, Stripe, PayPal, card logos, or payment gateway UI.
+
+**Status:** Accepted

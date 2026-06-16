@@ -1385,3 +1385,102 @@ No app checks were run because this was a documentation-only workflow milestone.
 **Next action:**
 
 Use `prompts/codex-workflow-runner.md` as the starting prompt for the next implementation milestone.
+
+## Entry 034 — Request Flow Foundation Added
+
+**Date:** 16 June 2026
+
+**Tool used:** Codex / Next.js
+
+**Task attempted:** Build the first customer request flow for available products.
+
+**What was done:**
+
+* Created a public request page at:
+
+```text
+hababy-site/app/request/page.tsx
+```
+
+* Created an interactive request form component at:
+
+```text
+hababy-site/components/request/RequestForm.tsx
+```
+
+* Updated product card CTAs so available products link to:
+
+```text
+/request?product=<slug>
+```
+
+* Updated product detail CTAs so available products link to the same request route.
+* Kept unavailable product CTAs disabled as `Currently unavailable`.
+* Updated header and footer request links to point to `/request`.
+* Cleaned up existing homepage request-first copy so it avoids checkout language.
+* The request page reads the selected product slug from the URL.
+* If a product slug is provided, the page shows the selected product summary.
+* If no product slug is provided, the user can choose from available products.
+* If the selected product is unavailable, the page shows a clear unavailable message and blocks submission.
+* Added the requested form fields:
+  * selected product
+  * rental start date
+  * rental end date
+  * delivery type
+  * delivery zone
+  * preferred delivery window
+  * preferred pickup window
+  * customer name
+  * phone
+  * optional email
+  * preferred language
+  * payment preference
+  * notes
+* Added a same-day / under-24-hours notice block.
+* Added a simple rental estimate using daily and weekly product pricing plus refundable deposit.
+* Made estimate copy clear that it is not a final confirmed total.
+* Added confirmation-style UI copy that says Hababy & Co will review availability, delivery details, payment/deposit, and handover before approval.
+* Preserved the request-first model.
+* Preserved `/supabase-test`.
+* Did not add online payment.
+* Did not add Stripe, PayPal, card logos, checkout, or payment gateway UI.
+* Did not add admin pages.
+* Did not save requests to Supabase.
+* Did not edit `.env.local`.
+* Did not run SQL.
+* Did not modify Supabase SQL files.
+* Did not commit or push.
+
+**Result:**
+
+The site now has a UI-only request flow foundation. Customers can begin a request from available products, choose dates and delivery/contact/payment-preference details, see a simple estimate, and receive request-first confirmation messaging.
+
+**Important decision:**
+
+Requests are not saved to Supabase in this milestone. Order saving should be a later backend milestone after schema, validation, security, RLS, and request mutation behavior are reviewed.
+
+**Availability rule preserved:**
+
+```text
+Products with usable stock can link to /request?product=<slug>.
+Products without usable stock cannot start submission and remain Currently unavailable.
+```
+
+**Same-day rule added:**
+
+```text
+Same-day requests and requests less than 24 hours away are blocked in the UI.
+```
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+```
+
+Both passed.
+
+**Next action:**
+
+Have the human owner review the `/request` flow on mobile and desktop. The recommended next milestone is validated Supabase order saving with Claude Code review before implementation.

@@ -39,7 +39,7 @@ export function SiteHeader() {
           <Link href="/#contact" className="btn btn-secondary hidden sm:inline-flex">
             Chat on WhatsApp
           </Link>
-          <Link href="/#request" className="btn btn-primary">
+          <Link href="/request" className="btn btn-primary">
             Request a booking
           </Link>
         </div>

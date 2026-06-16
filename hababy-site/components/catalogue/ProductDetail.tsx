@@ -99,7 +99,7 @@ export function ProductDetail({ product }: { product: ProductDetailType }) {
             </p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               {hasUsableInventory ? (
-                <Link href="/#request" className="btn btn-primary">
+                <Link href={`/request?product=${product.slug}`} className="btn btn-primary">
                   Request a booking
                 </Link>
               ) : (
@@ -199,7 +199,7 @@ export function ProductDetail({ product }: { product: ProductDetailType }) {
               dates, and delivery feasibility before handover.
             </p>
             {hasUsableInventory ? (
-              <Link href="/#request" className="btn btn-primary mt-6">
+              <Link href={`/request?product=${product.slug}`} className="btn btn-primary mt-6">
                 Request a booking
               </Link>
             ) : (

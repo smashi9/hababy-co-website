@@ -266,7 +266,7 @@ function ProductPreviewSection({
           <SectionIntro
             eyebrow="Rent baby gear"
             title="Start with the essentials."
-            copy="Browse the first pilot categories and request what your family needs. Availability is never treated as instant checkout."
+            copy="Browse the first pilot categories and request what your family needs. Availability is never treated as instant confirmation."
           />
           <div className="mt-6 grid grid-cols-2 gap-3">
             {categories.map((category) => (

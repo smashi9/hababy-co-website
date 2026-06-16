@@ -80,7 +80,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
           View details
         </Link>
         {hasUsableInventory ? (
-          <Link href="/#request" className="btn btn-primary">
+          <Link href={`/request?product=${product.slug}`} className="btn btn-primary">
             Request a booking
           </Link>
         ) : (

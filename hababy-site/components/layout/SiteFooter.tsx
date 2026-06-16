@@ -8,7 +8,7 @@ const footerLinks = [
   { label: "Delivery Zones", href: "/#delivery-zones" },
   { label: "Bundles", href: "/#bundles" },
   { label: "Welcome Kits", href: "/#welcome-kits" },
-  { label: "Request a booking", href: "/#request" },
+  { label: "Request a booking", href: "/request" },
 ];
 
 const policyLinks = ["Terms", "Privacy", "Deposit Policy", "Cancellation Policy"];
