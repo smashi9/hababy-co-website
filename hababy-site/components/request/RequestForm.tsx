@@ -1,25 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
+import { submitBookingRequest } from "@/app/request/actions";
+import { calculateRentalEstimate, getRentalDays } from "@/lib/pricing/estimate";
+import type { RequestActionState } from "@/app/request/actions";
 import type { ProductSummary } from "@/lib/supabase/queries";
 
-const deliveryTypes = ["Home", "Hotel", "Airbnb", "Family home", "Airport", "Other"];
-const deliveryZones = [
-  "Rabat",
-  "Agdal",
-  "Hay Riad",
-  "Souissi",
-  "Hassan",
-  "L'Orangeraie",
-  "Temara",
-  "Harhoura",
-  "Rabat-Sale Airport",
+const deliveryTypes = [
+  { label: "Home", value: "home" },
+  { label: "Hotel", value: "hotel" },
+  { label: "Airbnb", value: "airbnb" },
+  { label: "Family home", value: "family_home" },
+  { label: "Airport", value: "airport" },
+  { label: "Other", value: "other" },
 ];
-const deliveryWindows = ["Morning 9-12", "Afternoon 14-17", "Evening 17-20"];
-const pickupWindows = ["Morning 9-12", "Afternoon 14-17", "Evening 17-20"];
-const languageOptions = ["English", "French"];
-const paymentPreferences = ["MAD cash", "MAD bank transfer", "EUR cash", "USD cash"];
+const deliveryZones = [
+  { label: "Rabat", value: "rabat" },
+  { label: "Agdal", value: "agdal" },
+  { label: "Hay Riad", value: "hay_riad" },
+  { label: "Souissi", value: "souissi" },
+  { label: "Hassan", value: "hassan" },
+  { label: "L'Orangeraie", value: "lorangeraie" },
+  { label: "Temara", value: "temara" },
+  { label: "Harhoura", value: "harhoura" },
+  { label: "Rabat-Sale Airport", value: "rabat_sale_airport" },
+];
+const deliveryWindows = [
+  { label: "Morning 9-12", value: "morning_9_12" },
+  { label: "Afternoon 14-17", value: "afternoon_14_17" },
+  { label: "Evening 17-20", value: "evening_17_20" },
+];
+const pickupWindows = [
+  { label: "Morning 9-12", value: "morning_9_12" },
+  { label: "Afternoon 14-17", value: "afternoon_14_17" },
+  { label: "Evening 17-20", value: "evening_17_20" },
+];
+const languageOptions = [
+  { label: "English", value: "en" },
+  { label: "French", value: "fr" },
+];
+const paymentPreferences = [
+  { label: "MAD cash", value: "mad_cash" },
+  { label: "MAD bank transfer", value: "mad_bank_transfer" },
+  { label: "EUR cash", value: "eur_cash" },
+  { label: "USD cash", value: "usd_cash" },
+];
+
+const initialRequestActionState: RequestActionState = {
+  status: "idle",
+  message: "",
+};
 
 type RequestFormProps = {
   products: ProductSummary[];
@@ -30,7 +61,7 @@ function getFirstValue(value: string | null | undefined) {
   return value ?? "";
 }
 
-function parseDate(value: string) {
+function parseStartDate(value: string) {
   if (!value) {
     return null;
   }
@@ -39,20 +70,8 @@ function parseDate(value: string) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-function getRentalDays(startDate: string, endDate: string) {
-  const start = parseDate(startDate);
-  const end = parseDate(endDate);
-
-  if (!start || !end || end < start) {
-    return 0;
-  }
-
-  const dayMs = 24 * 60 * 60 * 1000;
-  return Math.floor((end.getTime() - start.getTime()) / dayMs) + 1;
-}
-
 function getNoticeBlockMessage(startDate: string) {
-  const start = parseDate(startDate);
+  const start = parseStartDate(startDate);
 
   if (!start) {
     return null;
@@ -70,36 +89,22 @@ function getNoticeBlockMessage(startDate: string) {
   return null;
 }
 
-function calculateEstimate(product: ProductSummary | undefined, days: number) {
-  if (!product || days <= 0) {
-    return {
-      rentalSubtotal: 0,
-      deposit: product?.deposit_mad ?? 0,
-      estimatedTotal: product?.deposit_mad ?? 0,
-    };
+function FieldError({ errors }: { errors: string[] | undefined }) {
+  if (!errors?.length) {
+    return null;
   }
 
-  const weeklyBlocks = Math.floor(days / 7);
-  const extraDays = days % 7;
-  const weeklySubtotal =
-    weeklyBlocks > 0
-      ? weeklyBlocks * product.weekly_price_mad + extraDays * product.daily_price_mad
-      : days * product.daily_price_mad;
-  const rentalSubtotal = Math.max(weeklySubtotal, product.daily_price_mad);
-  const deposit = product.deposit_mad;
-
-  return {
-    rentalSubtotal,
-    deposit,
-    estimatedTotal: rentalSubtotal + deposit,
-  };
+  return <p className="text-sm font-bold leading-6 text-primary">{errors[0]}</p>;
 }
 
 export function RequestForm({ products, initialProductSlug }: RequestFormProps) {
+  const [actionState, formAction, pending] = useActionState(
+    submitBookingRequest,
+    initialRequestActionState
+  );
   const [selectedSlug, setSelectedSlug] = useState(getFirstValue(initialProductSlug));
   const [rentalStartDate, setRentalStartDate] = useState("");
   const [rentalEndDate, setRentalEndDate] = useState("");
-  const [submitted, setSubmitted] = useState(false);
 
   const selectedProduct = products.find((product) => product.slug === selectedSlug);
   const availableProducts = products.filter(
@@ -110,7 +115,16 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
   const selectedProductMissing = Boolean(selectedSlug) && !selectedProduct;
   const rentalDays = getRentalDays(rentalStartDate, rentalEndDate);
   const noticeBlockMessage = getNoticeBlockMessage(rentalStartDate);
-  const estimate = calculateEstimate(selectedProduct, rentalDays);
+  const estimate = selectedProduct
+    ? calculateRentalEstimate(selectedProduct, rentalStartDate, rentalEndDate)
+    : {
+        rentalDays: 0,
+        rentalSubtotalMad: 0,
+        depositMad: 0,
+        deliveryFeeMad: 0,
+        urgentFeeMad: 0,
+        totalDueMad: 0,
+      };
   const canSubmit =
     Boolean(selectedProduct) &&
     !selectedProductIsUnavailable &&
@@ -122,23 +136,12 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
         `${selectedProduct.name}`,
         rentalDays > 0 ? `${rentalDays} rental day${rentalDays === 1 ? "" : "s"}` : null,
         rentalStartDate && rentalEndDate ? `${rentalStartDate} to ${rentalEndDate}` : null,
-        estimate.rentalSubtotal > 0 ? `${estimate.rentalSubtotal} MAD rental estimate` : null,
+        estimate.rentalSubtotalMad > 0 ? `${estimate.rentalSubtotalMad} MAD rental estimate` : null,
         `${selectedProduct.deposit_mad} MAD refundable deposit estimate`,
       ]
         .filter(Boolean)
         .join(" | ")
     : null;
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!canSubmit) {
-      setSubmitted(false);
-      return;
-    }
-
-    setSubmitted(true);
-  }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
@@ -196,15 +199,15 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
             </div>
             <div className="flex justify-between gap-4">
               <dt className="font-bold text-ink/68">Rental subtotal</dt>
-              <dd className="font-black text-ink">{estimate.rentalSubtotal} MAD</dd>
+              <dd className="font-black text-ink">{estimate.rentalSubtotalMad} MAD</dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt className="font-bold text-ink/68">Refundable deposit</dt>
-              <dd className="font-black text-ink">{estimate.deposit} MAD</dd>
+              <dd className="font-black text-ink">{estimate.depositMad} MAD</dd>
             </div>
             <div className="flex justify-between gap-4 rounded-2xl bg-sand/60 px-4 py-3">
               <dt className="font-black text-ink">Estimated total</dt>
-              <dd className="font-black text-ink">{estimate.estimatedTotal} MAD</dd>
+              <dd className="font-black text-ink">{estimate.totalDueMad} MAD</dd>
             </div>
           </dl>
           <p className="mt-4 text-xs font-bold leading-5 text-ink/64">
@@ -214,11 +217,11 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
         </div>
       </aside>
 
-      <form onSubmit={handleSubmit} className="card grid gap-6">
+      <form action={formAction} className="card grid gap-6">
         <div>
           <h2 className="font-heading text-3xl text-ink">Request details</h2>
           <p className="mt-3 text-sm leading-6 text-ink/72">
-            This form prepares your request only. It does not create a confirmed booking and no
+            This form sends your request for review. It does not create a confirmed booking and no
             online payment is taken.
           </p>
         </div>
@@ -226,10 +229,10 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
         <label className="grid gap-2 text-sm font-black text-ink">
           Selected product
           <select
+            name="selectedProductSlug"
             value={selectedSlug}
             onChange={(event) => {
               setSelectedSlug(event.target.value);
-              setSubmitted(false);
             }}
             className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
             required
@@ -244,35 +247,38 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
               <option value={selectedProduct.slug}>{selectedProduct.name} - unavailable</option>
             ) : null}
           </select>
+          <FieldError errors={actionState.fieldErrors?.selectedProductSlug} />
         </label>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-black text-ink">
             Rental start date
             <input
+              name="rentalStartDate"
               type="date"
               value={rentalStartDate}
               onChange={(event) => {
                 setRentalStartDate(event.target.value);
-                setSubmitted(false);
               }}
               className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
               required
             />
+            <FieldError errors={actionState.fieldErrors?.rentalStartDate} />
           </label>
           <label className="grid gap-2 text-sm font-black text-ink">
             Rental end date
             <input
+              name="rentalEndDate"
               type="date"
               value={rentalEndDate}
               min={rentalStartDate || undefined}
               onChange={(event) => {
                 setRentalEndDate(event.target.value);
-                setSubmitted(false);
               }}
               className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
               required
             />
+            <FieldError errors={actionState.fieldErrors?.rentalEndDate} />
           </label>
         </div>
 
@@ -285,38 +291,66 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-black text-ink">
             Delivery type
-            <select className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary" required>
+            <select
+              name="deliveryType"
+              className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
+              required
+            >
               {deliveryTypes.map((type) => (
-                <option key={type}>{type}</option>
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
               ))}
             </select>
+            <FieldError errors={actionState.fieldErrors?.deliveryType} />
           </label>
           <label className="grid gap-2 text-sm font-black text-ink">
             Delivery zone
-            <select className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary" required>
+            <select
+              name="deliveryZone"
+              className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
+              required
+            >
               {deliveryZones.map((zone) => (
-                <option key={zone}>{zone}</option>
+                <option key={zone.value} value={zone.value}>
+                  {zone.label}
+                </option>
               ))}
             </select>
+            <FieldError errors={actionState.fieldErrors?.deliveryZone} />
           </label>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-2 text-sm font-black text-ink">
             Preferred delivery window
-            <select className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary" required>
+            <select
+              name="deliveryWindow"
+              className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
+              required
+            >
               {deliveryWindows.map((window) => (
-                <option key={window}>{window}</option>
+                <option key={window.value} value={window.value}>
+                  {window.label}
+                </option>
               ))}
             </select>
+            <FieldError errors={actionState.fieldErrors?.deliveryWindow} />
           </label>
           <label className="grid gap-2 text-sm font-black text-ink">
             Preferred pickup window
-            <select className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary" required>
+            <select
+              name="pickupWindow"
+              className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
+              required
+            >
               {pickupWindows.map((window) => (
-                <option key={window}>{window}</option>
+                <option key={window.value} value={window.value}>
+                  {window.label}
+                </option>
               ))}
             </select>
+            <FieldError errors={actionState.fieldErrors?.pickupWindow} />
           </label>
         </div>
 
@@ -324,18 +358,22 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
           <label className="grid gap-2 text-sm font-black text-ink">
             Customer name
             <input
+              name="customerName"
               type="text"
               className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
               required
             />
+            <FieldError errors={actionState.fieldErrors?.customerName} />
           </label>
           <label className="grid gap-2 text-sm font-black text-ink">
             Phone
             <input
+              name="phone"
               type="tel"
               className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
               required
             />
+            <FieldError errors={actionState.fieldErrors?.phone} />
           </label>
         </div>
 
@@ -343,40 +381,58 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
           <label className="grid gap-2 text-sm font-black text-ink">
             Optional email
             <input
+              name="email"
               type="email"
               className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
             />
+            <FieldError errors={actionState.fieldErrors?.email} />
           </label>
           <label className="grid gap-2 text-sm font-black text-ink">
             Preferred language
-            <select className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary" required>
+            <select
+              name="preferredLanguage"
+              className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
+              required
+            >
               {languageOptions.map((language) => (
-                <option key={language}>{language}</option>
+                <option key={language.value} value={language.value}>
+                  {language.label}
+                </option>
               ))}
             </select>
+            <FieldError errors={actionState.fieldErrors?.preferredLanguage} />
           </label>
         </div>
 
         <label className="grid gap-2 text-sm font-black text-ink">
           Payment preference
-          <select className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary" required>
+          <select
+            name="paymentPreference"
+            className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
+            required
+          >
             {paymentPreferences.map((preference) => (
-              <option key={preference}>{preference}</option>
+              <option key={preference.value} value={preference.value}>
+                {preference.label}
+              </option>
             ))}
           </select>
+          <FieldError errors={actionState.fieldErrors?.paymentPreference} />
         </label>
 
         <label className="grid gap-2 text-sm font-black text-ink">
           Notes
           <textarea
+            name="notes"
             rows={4}
             className="rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
             placeholder="Arrival details, hotel name, family-home notes, or anything Hababy & Co should review."
           />
+          <FieldError errors={actionState.fieldErrors?.notes} />
         </label>
 
-        <button type="submit" className="btn btn-primary" disabled={!canSubmit}>
-          Send request for review
+        <button type="submit" className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-60" disabled={!canSubmit || pending}>
+          {pending ? "Sending request..." : "Send request for review"}
         </button>
 
         {!canSubmit ? (
@@ -386,13 +442,24 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
           </p>
         ) : null}
 
-        {submitted ? (
-          <div className="rounded-[1.25rem] border border-sage/35 bg-sage/15 p-5">
-            <h3 className="text-lg font-black text-ink">Thanks - request prepared for review.</h3>
+        {actionState.status === "error" ? (
+          <div className="rounded-[1.25rem] border border-primary/30 bg-primary/10 p-5">
+            <h3 className="text-lg font-black text-primary">Please check this request.</h3>
             <p className="mt-3 text-sm leading-6 text-ink/74">
-              Thanks - this request will be reviewed by Hababy & Co. We&apos;ll confirm availability,
-              delivery details, payment/deposit, and handover before approval.
+              {actionState.message}
             </p>
+          </div>
+        ) : null}
+
+        {actionState.status === "success" ? (
+          <div className="rounded-[1.25rem] border border-sage/35 bg-sage/15 p-5">
+            <h3 className="text-lg font-black text-ink">Thanks - request received.</h3>
+            <p className="mt-3 text-sm leading-6 text-ink/74">{actionState.message}</p>
+            {actionState.orderReference ? (
+              <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-sm font-bold leading-6 text-ink/70">
+                Request reference: {actionState.orderReference}
+              </p>
+            ) : null}
             {selectedSummary ? (
               <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-sm font-bold leading-6 text-ink/70">
                 {selectedSummary}
@@ -402,8 +469,8 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
         ) : null}
 
         <div className="rounded-[1.25rem] bg-page p-5 text-sm leading-6 text-ink/72">
-          Requests are not saved to Supabase in this foundation milestone. The next backend
-          milestone should add validated order saving after schema and security review.
+          Requests are saved for Hababy & Co review with status new. The booking is not confirmed
+          until availability, delivery, payment/deposit, and handover are reviewed.
           <Link href="/products" className="ml-1 font-black text-primary">
             Browse products
           </Link>

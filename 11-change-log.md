@@ -179,3 +179,41 @@ Owner confirmation/QC gate:
 **Payment decision:** The request flow records only an offline payment preference. It does not include online payment, checkout, Stripe, PayPal, card logos, or payment gateway UI.
 
 **Status:** Accepted
+
+## Change 007 — Booking Requests Now Save to Supabase
+
+**Date:** 16 June 2026
+
+**Change type:** Product behavior / backend behavior / customer journey
+
+**Summary:** The `/request` flow now saves validated customer booking requests to Supabase.
+
+**Reason:** The request flow needs to become a real pilot workflow, not just a UI foundation. Customers can now submit structured requests that create customer/order records for Hababy & Co review.
+
+**Files affected:**
+
+* `hababy-site/app/request/actions.ts`
+* `hababy-site/components/request/RequestForm.tsx`
+* `hababy-site/lib/pricing/estimate.ts`
+* `hababy-site/lib/supabase/orders.ts`
+* `hababy-site/lib/validation/requestSchema.ts`
+* `hababy-site/package.json`
+* `hababy-site/package-lock.json`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Use a server action with server-side Zod validation and the service-role/admin Supabase client to create or update the customer record and insert a new order.
+
+**Customer data decision:** Existing customers are matched by exact phone using the earliest created matching row. Existing email and notes are preserved when a new submission leaves those fields blank.
+
+**Availability decision:** Availability is rechecked server-side before saving. A product must exist, be active, not be hidden, and have at least one usable inventory row where `status = available`, `cleaning_status = clean`, and `current_order_id is null`.
+
+**Same-day decision:** The 24-hour request block is enforced server-side as well as in the UI.
+
+**Order decision:** New saved requests use status `new`. The selected product is saved as a JSON snapshot. Delivery fee and urgent fee are `0` for now. Currency is `MAD`.
+
+**Inventory decision:** Saving a request does not reserve inventory, does not update `current_order_id`, and does not change inventory status.
+
+**Payment decision:** The flow records only offline payment preference. It does not include online payment, checkout, Stripe, PayPal, card logos, or payment gateway UI.
+
+**Status:** Accepted

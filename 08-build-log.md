@@ -1484,3 +1484,97 @@ Both passed.
 **Next action:**
 
 Have the human owner review the `/request` flow on mobile and desktop. The recommended next milestone is validated Supabase order saving with Claude Code review before implementation.
+
+## Entry 035 — Validated Supabase Order Saving Added
+
+**Date:** 16 June 2026
+
+**Tool used:** Codex / Next.js / Supabase server action
+
+**Task attempted:** Turn the `/request` UI foundation into a real saved request flow using validated server-side Supabase writes.
+
+**What was done:**
+
+* Added Zod as an app dependency for request validation.
+* Created a server action at:
+
+```text
+hababy-site/app/request/actions.ts
+```
+
+* Created request validation at:
+
+```text
+hababy-site/lib/validation/requestSchema.ts
+```
+
+* Created reusable estimate logic at:
+
+```text
+hababy-site/lib/pricing/estimate.ts
+```
+
+* Created Supabase order/customer persistence logic at:
+
+```text
+hababy-site/lib/supabase/orders.ts
+```
+
+* Updated the request form to submit through the server action.
+* Added pending, success, and validation-error states to the request form.
+* Removed the old UI-only copy that said requests are not saved to Supabase.
+* Kept the customer-facing copy request-first:
+  * request received
+  * not a confirmed booking
+  * Hababy & Co confirms availability, delivery, payment/deposit, and handover before approval
+* Rechecked product availability server-side before saving:
+  * product must exist
+  * product must be active
+  * product must not be hidden
+  * product must have at least one usable inventory row
+* Rechecked the 24-hour block server-side.
+* Recomputed the rental estimate server-side using product daily/weekly price and deposit.
+* Saved or reused a customer by exact phone lookup.
+* Applied Claude review follow-up fixes so duplicate phone matches use the earliest customer row and blank submitted email/notes do not wipe existing customer data.
+* Saved new orders with status `new`.
+* Stored the selected product as a JSON snapshot.
+* Set delivery fee and urgent fee to `0` for now.
+* Set currency to `MAD`.
+* Recorded only the offline payment preference.
+* Returned only a minimal success result to the browser:
+  * success message
+  * short request reference
+* Did not return PII or raw database records to the browser.
+* Did not reserve inventory.
+* Did not update `inventory.current_order_id`.
+* Did not change inventory status.
+* Preserved `/supabase-test`.
+* Did not add admin pages.
+* Did not add WhatsApp integration.
+* Did not add online payment.
+* Did not add Stripe, PayPal, card logos, checkout, or payment gateway UI.
+* Did not edit `.env.local`.
+* Did not run SQL.
+* Did not modify Supabase SQL files.
+* Did not commit or push.
+
+**Result:**
+
+The request flow now saves validated booking requests to Supabase through a server action using the service-role/admin client on the server only.
+
+**Important decision:**
+
+This milestone creates saved request records but does not reserve physical inventory. A submitted request remains `new` until Hababy & Co manually reviews availability, delivery feasibility, payment/deposit, and handover details.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+```
+
+Both passed.
+
+**Next action:**
+
+Have Claude Code review the server action, validation, customer lookup, order insert, and service-role boundaries before committing. Then test against a reviewed Supabase project with seeded usable inventory.
