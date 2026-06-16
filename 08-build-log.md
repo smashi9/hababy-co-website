@@ -1332,3 +1332,56 @@ The old planning language that treated catalogue availability as request-first o
 availability check first
 then owner confirmation/QC before approval
 ```
+
+## Entry 033 — Level 2 Workflow Routing Added
+
+**Date:** 16 June 2026
+
+**Tool used:** Codex
+
+**Task attempted:** Create reusable routing and workflow-runner files for future Hababy & Co milestones.
+
+**What was done:**
+
+* Created `AGENT_ROUTING.md`.
+* Created `prompts/codex-workflow-runner.md`.
+* Defined the project role model for:
+  * human owner
+  * ChatGPT
+  * Codex
+  * Claude Code
+  * Gemini
+  * Impeccable
+  * GitHub
+  * Supabase
+  * Vercel
+* Documented when Codex may proceed independently.
+* Documented when Codex must stop and ask for Claude Code, Gemini, Impeccable, or the human owner.
+* Added safety rules for SQL, `.env.local`, Vercel secrets, commits, pushes, payment language, and milestone scope.
+* Reconfirmed the current Hababy business rules:
+  * request-first
+  * availability check before request
+  * available products can be requested
+  * unavailable products cannot be requested
+  * requests remain pending Hababy confirmation
+  * no online payment
+  * no "Book now" or "Pay now"
+  * parents choose car seat group based on listed specs
+  * Hababy does not confirm child suitability
+* Added a reusable prompt that can be pasted into Codex at the start of future milestones.
+
+**Result:**
+
+The project is moving from fully manual step-by-step guidance toward a reusable Codex workflow-runner approach, while preserving specialist roles for Gemini, Claude Code, Impeccable, ChatGPT, and the human owner.
+
+**Important decision:**
+
+Codex can now be used as the default milestone runner, but not as the final authority for business decisions, production SQL, secrets, commits, deployment settings, broad design exploration, design critique, or high-risk backend architecture.
+
+**Checks run:**
+
+No app checks were run because this was a documentation-only workflow milestone.
+
+**Next action:**
+
+Use `prompts/codex-workflow-runner.md` as the starting prompt for the next implementation milestone.
