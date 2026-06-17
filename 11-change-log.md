@@ -282,3 +282,31 @@ Owner confirmation/QC gate:
 **Scope decision:** This milestone does not add `reviewing`, does not reserve inventory, does not update `inventory.current_order_id`, does not add WhatsApp handoff, and does not add payment or checkout UI.
 
 **Status:** Accepted
+
+## Change 010 — Admin WhatsApp Handoff Drafts Added
+
+**Date:** 17 June 2026
+
+**Change type:** Admin workflow / customer communication
+
+**Summary:** Added copyable WhatsApp-ready message drafts to admin order detail pages.
+
+**Reason:** The owner needs a fast, safe way to contact customers after reviewing an order without adding WhatsApp API integration or automated sending.
+
+**Files affected:**
+
+* `hababy-site/components/admin/OrderDetailView.tsx`
+* `hababy-site/components/admin/WhatsAppHandoff.tsx`
+* `hababy-site/lib/whatsapp/message.ts`
+* `hababy-site/tests/e2e/admin-access.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Generate admin-side drafts for new, confirmed, and cancelled requests. Admins can copy the message and, when the customer phone can be normalized, open WhatsApp with the text prefilled.
+
+**Safety decision:** This is not WhatsApp API integration. The app does not send messages automatically, does not add webhooks, does not add background jobs, and does not change order status or inventory.
+
+**Payment decision:** Drafts keep payment offline and do not include online payment links.
+
+**Status:** Accepted

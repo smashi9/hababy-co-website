@@ -1800,3 +1800,74 @@ npm run test:e2e
 ```
 
 The skipped test was the optional authenticated admin flow because `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` were not present in the test environment. No status-mutation Playwright tests were added to the default suite.
+
+## Entry 040 — Milestone 038 WhatsApp Handoff Foundation Added
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Next.js / Playwright
+
+**Task attempted:** Add a safe admin-side WhatsApp handoff foundation on order detail pages.
+
+**What was done:**
+
+* Added a WhatsApp message helper at:
+
+```text
+hababy-site/lib/whatsapp/message.ts
+```
+
+* Added an admin handoff component at:
+
+```text
+hababy-site/components/admin/WhatsAppHandoff.tsx
+```
+
+* Added the WhatsApp handoff section to admin order detail pages.
+* Generated message drafts for:
+  * new requests
+  * confirmed requests
+  * cancelled requests
+* Added a read-only textarea containing the generated message.
+* Added a `Copy message` button.
+* Added an `Open WhatsApp` link only when the customer phone can be normalized into a basic WhatsApp URL format.
+* Added copy-only fallback when the phone cannot be safely normalized.
+* Kept payment/deposit language offline-only.
+* Kept request-first language for new requests.
+* Added a car-seat note when the selected product appears to be a car seat, clarifying that parents choose based on listed specs and Hababy does not confirm child suitability.
+* Added an optional authenticated, non-mutating Playwright check that verifies the handoff section appears on an existing order detail page when admin e2e credentials are present.
+* Did not send WhatsApp messages automatically.
+* Did not add WhatsApp Business API.
+* Did not add webhooks.
+* Did not add background jobs.
+* Did not change order status.
+* Did not reserve inventory.
+* Did not add online payment.
+* Did not edit Supabase SQL files.
+* Did not run SQL.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Safety boundary:**
+
+The handoff is admin-side only and appears behind the existing admin auth/RLS guard. It generates copyable or prefilled text but does not transmit anything unless the human admin manually uses WhatsApp.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+`npm run lint` passed.
+
+`npm run build` passed.
+
+`npm run test:e2e` passed:
+
+```text
+11 passed
+```
+
+The authenticated admin checks ran because local e2e admin credentials were present. The new WhatsApp handoff check only verified that the section appears on an existing order detail page; it did not click the external WhatsApp link and did not send a message.

@@ -22,6 +22,8 @@ test.describe("logged-out admin access", () => {
 });
 
 test.describe("authenticated admin access", () => {
+  test.describe.configure({ mode: "serial" });
+
   const adminEmail = process.env.E2E_ADMIN_EMAIL;
   const adminPassword = process.env.E2E_ADMIN_PASSWORD;
 
@@ -45,5 +47,27 @@ test.describe("authenticated admin access", () => {
     await page.goto("/admin/orders");
     await expect(page).toHaveURL(/\/admin\/login/);
     await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
+  });
+
+  test("admin order detail shows WhatsApp handoff when an order exists", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByLabel(/Email/i).fill(adminEmail ?? "");
+    await page.getByLabel(/Password/i).fill(adminPassword ?? "");
+    await page.getByRole("button", { name: /^Sign in$/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/orders/);
+
+    const firstOrderLink = page.locator("tbody a[href^='/admin/orders/']").first();
+
+    if ((await firstOrderLink.count()) === 0) {
+      test.skip(true, "No existing orders available for the non-mutating admin detail check.");
+    }
+
+    await firstOrderLink.click();
+    await expect(page).toHaveURL(/\/admin\/orders\/[0-9a-f-]+/);
+    await expect(page.getByRole("heading", { name: /Request/i })).toBeVisible();
+    await expect(page.getByTestId("whatsapp-handoff")).toBeVisible();
+    await expect(page.getByRole("heading", { name: /WhatsApp message draft/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Copy message/i })).toBeVisible();
   });
 });

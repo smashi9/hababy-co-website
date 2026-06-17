@@ -353,6 +353,11 @@ they mutate order data. Any future automated status mutation test must be skippe
 behind explicit disposable/test Supabase credentials and must never run against production by
 accident.
 
+Admin WhatsApp handoff checks may run as authenticated, non-mutating Playwright tests when
+`E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present. These tests may verify that the handoff
+section and copy button are visible on an existing order detail page, but they must not click the
+external WhatsApp link or send messages.
+
 Recommended Codex behavior:
 
 ```text
@@ -878,6 +883,17 @@ Pass condition:
 
 ```text
 WhatsApp is a communication handoff, not the database of record.
+```
+
+Admin WhatsApp handoff tests:
+
+```text
+[ ] Admin order detail shows a WhatsApp message draft
+[ ] Message tone matches new, confirmed, or cancelled status
+[ ] Message can be copied manually
+[ ] Open WhatsApp link appears only when the phone can be normalized
+[ ] Tests do not send WhatsApp messages automatically
+[ ] Tests do not click external WhatsApp links
 ```
 
 ## Admin Panel Tests

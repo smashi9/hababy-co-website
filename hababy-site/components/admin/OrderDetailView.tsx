@@ -1,5 +1,6 @@
 import type { AdminOrderDetail } from "@/types/order";
 import { OrderStatusActions } from "./OrderStatusActions";
+import { WhatsAppHandoff } from "./WhatsAppHandoff";
 import { formatDate, formatDateTime, formatLabel, formatMoney, orderReference } from "./orderFormat";
 
 function DetailField({ label, value }: { label: string; value: React.ReactNode }) {
@@ -89,6 +90,8 @@ export function OrderDetailView({ order }: { order: AdminOrderDetail }) {
           </p>
         )}
       </section>
+
+      <WhatsAppHandoff order={order} />
 
       <section className="grid gap-4 md:grid-cols-2">
         <div className="card">
