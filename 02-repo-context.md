@@ -335,6 +335,50 @@ Brand assets may still need to be copied into hababy-site/public/brand/.
 Tailwind/App Router/import alias should be confirmed from generated files.
 ```
 
+## Current Implementation Notes
+
+As of Entry 036, the app includes:
+
+```text
+Public Hababy & Co homepage
+Inventory-aware product catalogue and product detail pages
+Request flow at /request
+Validated Supabase request saving
+Read-only admin order review at /admin/orders and /admin/orders/[id]
+Supabase Auth admin login at /admin/login
+Proxy guard for /admin/*
+Protected admin layout guard before order pages render
+```
+
+Current confirmed runtime dependencies include:
+
+```text
+Next.js 16.2.9
+React 19.2.4
+Tailwind CSS 4
+Supabase JS
+Supabase SSR Auth helpers
+Zod
+```
+
+Admin access uses:
+
+```text
+Supabase Auth session
+Existing admin_users table / is_admin() RLS infrastructure
+Optional ADMIN_ALLOWED_EMAILS allowlist as extra protection
+```
+
+Important notes:
+
+```text
+Admin order/customer reads use the authenticated user session so RLS applies.
+The new admin review surface does not use the service-role key.
+Existing public request saving still uses the server-only service-role helper.
+The human owner must create the real Supabase Auth admin user and active admin_users row.
+The admin route guard uses Next.js 16 `proxy.ts` with a `/admin/:path*` matcher.
+```
+
 ## Decisions Already Made
 
 ```text

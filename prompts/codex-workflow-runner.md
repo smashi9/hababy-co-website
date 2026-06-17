@@ -48,6 +48,9 @@ Checks:
 
 - Run npm run lint from hababy-site/.
 - Run npm run build from hababy-site/.
+- After lint and build, run npm run test:e2e from hababy-site/ if that script is available.
+- If Playwright/e2e tests are not installed or not relevant for the milestone, say that clearly.
+- Do not silently ignore e2e failures; summarize failures and whether human testing is still safe.
 - If checks are not needed because the milestone is documentation-only, say that clearly.
 
 Stop and ask for another agent when AGENT_ROUTING.md requires it:

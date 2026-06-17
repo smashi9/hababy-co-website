@@ -1578,3 +1578,99 @@ Both passed.
 **Next action:**
 
 Have Claude Code review the server action, validation, customer lookup, order insert, and service-role boundaries before committing. Then test against a reviewed Supabase project with seeded usable inventory.
+
+## Entry 036 — Admin Order Review Foundation Added
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Next.js / Supabase Auth
+
+**Task attempted:** Create a protected, read-only admin order review surface so the owner can view saved customer requests without using SQL.
+
+**What was done:**
+
+* Added `@supabase/ssr` for cookie-backed Supabase Auth in the App Router.
+* Added Supabase Auth login at `/admin/login`.
+* Added `/admin` redirect behavior to `/admin/orders`.
+* Added a read-only order list at `/admin/orders`, newest first.
+* Added a read-only order detail page at `/admin/orders/[id]`.
+* Added an admin shell with basic navigation and sign out.
+* Added noindex metadata for the admin route tree.
+* Added a proxy guard for `/admin/*`.
+* Added a server-side protected admin layout guard before order pages render.
+* Verified both a valid Supabase Auth user session and an active `admin_users` row.
+* Added optional `ADMIN_ALLOWED_EMAILS` as a belt-and-suspenders allowlist in `.env.example`.
+* Read orders and customer summaries through the authenticated user session so existing RLS/admin policies apply.
+* Rendered selected products defensively from the `selected_products` JSON snapshot.
+* Displayed list/detail request data without dumping raw JSON.
+* Did not add status updates.
+* Did not reserve inventory.
+* Did not add WhatsApp handoff.
+* Did not add admin CRUD beyond order review.
+* Did not add online payment or checkout UI.
+* Did not run SQL.
+* Did not edit Supabase SQL files.
+* Did not edit `.env.local`.
+* Did not commit or push.
+
+**Service role boundary:**
+
+The new admin review surface does not use the service-role client. Existing public request saving still uses the server-only service-role helper from the previous milestone.
+
+**Result:**
+
+The project now has a real Supabase Auth admin foundation for reviewing saved booking requests while preserving the request-first workflow and read-only milestone scope.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+```
+
+Both passed. After Claude's before-commit review, the admin guard was migrated from `middleware.ts` / `middleware()` to `proxy.ts` / `proxy()` for Next.js 16 compatibility while preserving the same `/admin/*` protection behavior.
+
+**Next action:**
+
+Have the human owner bootstrap a real Supabase Auth admin user and matching active `admin_users` row, then test login, protected redirects, order list/detail display, and sign out. Claude Code review is recommended before commit because this milestone touches auth, RLS-dependent reads, and PII display.
+
+## Entry 037 — Playwright Workflow QA Layer Documented
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / documentation update
+
+**Task attempted:** Add Playwright to the Hababy & Co AI workflow plan as the automated browser QA and smoke-test runner.
+
+**What was done:**
+
+* Documented that Playwright is not an AI agent.
+* Added Playwright as the automated browser QA, smoke-test, and regression-check layer.
+* Clarified that Codex writes and runs Playwright tests when tests exist.
+* Clarified that Codex should summarize Playwright failures before asking the human owner for manual testing.
+* Updated the reusable Codex workflow runner so `npm run test:e2e` should run after lint and build when available.
+* Added an automated smoke testing section to the test plan.
+* Defined the initial Playwright smoke-test scope:
+  * homepage loads
+  * `/products` loads
+  * a product detail page loads
+  * `/request` loads
+  * `/supabase-test` loads
+  * logged-out `/admin/orders` redirects to `/admin/login`
+  * `/admin/login` loads
+* Clarified that authenticated admin e2e tests should run only when `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present.
+* Clarified that tests creating Supabase customer/order data must be explicitly marked, disabled by default, or pointed at a disposable/test Supabase project.
+* Did not install Playwright.
+* Did not edit app code.
+* Did not edit Supabase SQL files.
+* Did not touch `.env.local`.
+* Did not run SQL.
+* Did not commit or push.
+
+**Result:**
+
+The project now has a documented place for Playwright in the Level 2 AI workflow: Codex remains the implementation runner, and Playwright becomes the scripted browser QA tool Codex can use after future implementation milestones.
+
+**Checks run:**
+
+No app checks were needed because this was a documentation-only workflow update and Playwright is not installed yet.

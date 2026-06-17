@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This file defines how Hababy & Co project work should be routed between the human owner, ChatGPT, Codex, Claude Code, Gemini, Impeccable, GitHub, Supabase, and Vercel.
+This file defines how Hababy & Co project work should be routed between the human owner, ChatGPT, Codex, Claude Code, Gemini, Impeccable, GitHub, Supabase, Vercel, and supporting workflow tools such as Playwright.
 
 The goal is to let future milestones run mostly from Codex in VS Code while preserving the intended specialist workflow. Codex can handle implementation, routine documentation, and verification, but it should pause when a decision needs another specialist or the human owner.
 
@@ -20,6 +20,14 @@ The goal is to let future milestones run mostly from Codex in VS Code while pres
 | Supabase | Backend/database | Stores catalogue, inventory, request, auth, storage, and operational data |
 | Vercel | Deployment | Hosts the Next.js app and manages deployment environment variables |
 
+## Workflow Tool Table
+
+Playwright is not an AI agent. It is the automated browser QA and regression test runner used by Codex when the project has browser tests available.
+
+| Tool | Main responsibility | Typical work |
+| --- | --- | --- |
+| Playwright | Automated browser QA, smoke tests, regression checks | Opens the app in a browser, follows scripted checks, verifies redirects and page behavior, captures failures for Codex to summarize |
+
 ## When Codex May Proceed
 
 Codex may proceed when the task is within an approved milestone and can be completed using existing project documents, existing architecture, and established business rules.
@@ -31,6 +39,7 @@ Codex may proceed with:
 - Updating `08-build-log.md`.
 - Updating `11-change-log.md` when user-facing behavior, scope, architecture, or business rules change.
 - Running `npm run lint` and `npm run build`.
+- Running Playwright browser checks, such as `npm run test:e2e`, after meaningful implementation milestones when those tests exist.
 - Making small technical choices that follow existing project patterns.
 - Creating draft SQL files only when explicitly requested, clearly marked for human review, and not run by Codex.
 
@@ -102,6 +111,10 @@ Codex must stop and ask the human owner when the work involves:
 - Preserve existing app behavior unless the milestone explicitly changes it.
 - Update `08-build-log.md` after each milestone.
 - Update `11-change-log.md` only for meaningful scope, behavior, architecture, business-rule, or launch-decision changes.
+- Codex should summarize Playwright failures before asking the human owner to do manual testing.
+- Playwright should not create production data by default.
+- Playwright tests that write to Supabase must be explicitly marked, disabled by default, or pointed at a disposable/test Supabase project.
+- Playwright must not be used to run production actions, manage secrets, or approve business decisions.
 
 ## Current Hababy Business Rules
 

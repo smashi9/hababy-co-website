@@ -302,6 +302,40 @@ Run this after every major build step.
 [ ] Site works on desktop width
 ```
 
+## Automated Smoke Testing
+
+Playwright is the planned automated browser QA layer for this project. It is not an AI agent. Codex should write and run Playwright tests when the project has e2e tests available, then summarize failures before asking the human owner for manual testing.
+
+Initial Playwright smoke tests should cover:
+
+```text
+[ ] Homepage loads
+[ ] /products loads
+[ ] A product detail page loads
+[ ] /request loads
+[ ] /supabase-test loads
+[ ] Logged-out /admin/orders redirects to /admin/login
+[ ] /admin/login loads
+```
+
+Authenticated admin tests are optional. They should run only when both of these environment variables are present in the test environment:
+
+```text
+E2E_ADMIN_EMAIL
+E2E_ADMIN_PASSWORD
+```
+
+Automated tests should avoid creating production data by default. Tests that create real customer, order, inventory, or admin records must be explicitly marked, disabled by default, or configured to use a disposable/test Supabase project with cleanup.
+
+Recommended Codex behavior once Playwright is installed:
+
+```text
+1. Run npm run lint.
+2. Run npm run build.
+3. Run npm run test:e2e if available.
+4. Summarize any browser failures with route, expected behavior, actual behavior, and whether manual testing should proceed.
+```
+
 ## Customer-Facing Page Tests
 
 ## Home Page Tests

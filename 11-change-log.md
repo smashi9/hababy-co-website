@@ -217,3 +217,39 @@ Owner confirmation/QC gate:
 **Payment decision:** The flow records only offline payment preference. It does not include online payment, checkout, Stripe, PayPal, card logos, or payment gateway UI.
 
 **Status:** Accepted
+
+## Change 008 — Protected Admin Order Review Added
+
+**Date:** 17 June 2026
+
+**Change type:** Admin behavior / security / operational workflow
+
+**Summary:** Added a real Supabase Auth protected admin surface for read-only review of saved customer requests.
+
+**Reason:** Hababy & Co needs a non-SQL way for the owner to review incoming request records created by the public `/request` flow, while keeping customer PII behind authentication and admin authorization.
+
+**Files affected:**
+
+* `hababy-site/middleware.ts`
+* `hababy-site/app/admin/`
+* `hababy-site/components/admin/`
+* `hababy-site/lib/supabase/authConfig.ts`
+* `hababy-site/lib/supabase/serverAuth.ts`
+* `hababy-site/lib/supabase/middlewareAuth.ts`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/types/order.ts`
+* `hababy-site/types/customer.ts`
+* `hababy-site/.env.example`
+* `hababy-site/package.json`
+* `hababy-site/package-lock.json`
+* `02-repo-context.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Use real Supabase Auth plus the existing `admin_users` / `is_admin()` infrastructure. `ADMIN_ALLOWED_EMAILS` is optional extra protection only; it is not the primary admin check.
+
+**Read decision:** Admin order/customer reads use the authenticated Supabase user session so Row Level Security remains the enforcement layer. The new admin review pages do not use the service-role key.
+
+**Scope decision:** This milestone is read-only. It does not add status changes, inventory reservation, WhatsApp handoff, product/settings CRUD, payment UI, schema changes, or SQL.
+
+**Status:** Accepted
