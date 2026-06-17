@@ -343,3 +343,34 @@ Owner confirmation/QC gate:
 **Safety decision:** This change does not add OTP, SMS providers, WhatsApp API integration, automatic sending, or automatic phone verification. Fake or unreachable numbers remain part of human review before confirmation.
 
 **Status:** Accepted
+
+## Change 012 — Read-Only Admin Inventory Visibility Added
+
+**Date:** 17 June 2026
+
+**Change type:** Admin workflow / inventory visibility
+
+**Summary:** Added a protected read-only admin inventory page.
+
+**Reason:** The owner needs a simple way to view stock and item readiness without opening Supabase directly, while keeping inventory mutation and reservation out of scope.
+
+**Files affected:**
+
+* `hababy-site/app/admin/(protected)/inventory/page.tsx`
+* `hababy-site/components/admin/AdminShell.tsx`
+* `hababy-site/components/admin/InventorySummary.tsx`
+* `hababy-site/components/admin/InventoryTable.tsx`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/types/inventory.ts`
+* `hababy-site/tests/e2e/admin-access.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Inventory visibility uses the existing authenticated Supabase admin/RLS client. It does not use the service-role client.
+
+**Usability decision:** A unit is shown as usable only when `status = available`, `cleaning_status = clean`, and `current_order_id is null`.
+
+**Scope decision:** This milestone does not edit inventory, reserve inventory, change `current_order_id`, add product CRUD, add SQL, or run SQL.
+
+**Status:** Accepted

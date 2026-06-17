@@ -19,6 +19,13 @@ test.describe("logged-out admin access", () => {
     await expect(page.getByRole("heading", { name: /Incoming requests/i })).toHaveCount(0);
     await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
   });
+
+  test("/admin/inventory redirects to /admin/login", async ({ page }) => {
+    await page.goto("/admin/inventory");
+    await expect(page).toHaveURL(/\/admin\/login/);
+    await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Inventory visibility/i })).toHaveCount(0);
+  });
 });
 
 test.describe("authenticated admin access", () => {
@@ -69,5 +76,22 @@ test.describe("authenticated admin access", () => {
     await expect(page.getByTestId("whatsapp-handoff")).toBeVisible();
     await expect(page.getByRole("heading", { name: /WhatsApp message draft/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /Copy message/i })).toBeVisible();
+  });
+
+  test("admin can view read-only inventory visibility", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByLabel(/Email/i).fill(adminEmail ?? "");
+    await page.getByLabel(/Password/i).fill(adminPassword ?? "");
+    await page.getByRole("button", { name: /^Sign in$/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/orders/);
+    await page.getByRole("link", { name: /Inventory/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/inventory/);
+    await expect(page.getByRole("heading", { name: /Inventory visibility/i })).toBeVisible();
+    await expect(page.getByText(/This page does not edit inventory/i)).toBeVisible();
+    await expect(
+      page.getByRole("table").or(page.getByText(/No inventory units found/i))
+    ).toBeVisible();
   });
 });

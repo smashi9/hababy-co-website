@@ -9,6 +9,13 @@ import type {
   AdminOrderListItem,
   SelectedProductSnapshot,
 } from "@/types/order";
+import type {
+  AdminInventoryOverview,
+  AdminInventoryProductSummary,
+  AdminInventoryUnit,
+  InventoryCleaningStatus,
+  InventoryStatus,
+} from "@/types/inventory";
 import type { OrderStatusUpdateInput } from "@/lib/validation/orderStatusSchema";
 
 type AdminAccessResult = {
@@ -19,6 +26,28 @@ type AdminAccessResult = {
 type AdminOrderRow = Omit<AdminOrderDetail, "selected_products" | "customer"> & {
   selected_products: unknown;
   customer: AdminOrderDetail["customer"] | AdminOrderDetail["customer"][];
+};
+
+type AdminInventoryProductRow = {
+  id: string;
+  name: string;
+  slug: string;
+  availability_mode: string;
+  inventory: AdminInventoryUnitRow[] | null;
+};
+
+type AdminInventoryUnitRow = {
+  item_id: string;
+  product_id: string | null;
+  brand: string | null;
+  model: string | null;
+  serial_number: string | null;
+  source: string | null;
+  condition: string | null;
+  status: InventoryStatus;
+  cleaning_status: InventoryCleaningStatus;
+  current_order_id: string | null;
+  notes: string | null;
 };
 
 export async function hasAdminUserAccess(supabase: SupabaseClient, user: User) {
@@ -123,6 +152,75 @@ function mapOrderRow<T extends AdminOrderRow>(row: T) {
   };
 }
 
+function isInventoryUnitUsable(unit: AdminInventoryUnitRow) {
+  return (
+    unit.status === "available" &&
+    unit.cleaning_status === "clean" &&
+    unit.current_order_id === null
+  );
+}
+
+function getInventoryStatusSummary({
+  usableStockCount,
+  needsCleaningCount,
+  maintenanceCount,
+}: {
+  usableStockCount: number;
+  needsCleaningCount: number;
+  maintenanceCount: number;
+}) {
+  if (usableStockCount > 0) {
+    return "Available to request";
+  }
+
+  if (maintenanceCount > 0) {
+    return "Maintenance";
+  }
+
+  if (needsCleaningCount > 0) {
+    return "Needs cleaning";
+  }
+
+  return "Currently unavailable";
+}
+
+function mapInventoryProductRow(row: AdminInventoryProductRow) {
+  const inventory = row.inventory ?? [];
+  const units: AdminInventoryUnit[] = inventory.map((unit) => ({
+    ...unit,
+    product_name: row.name,
+    product_slug: row.slug,
+    usable_for_request: isInventoryUnitUsable(unit),
+  }));
+  const usableStockCount = units.filter((unit) => unit.usable_for_request).length;
+  const needsCleaningCount = units.filter(
+    (unit) =>
+      unit.cleaning_status === "needs_cleaning" || unit.cleaning_status === "inspection_needed"
+  ).length;
+  const maintenanceCount = units.filter(
+    (unit) => unit.status === "maintenance" || unit.cleaning_status === "maintenance_needed"
+  ).length;
+  const unavailableCount = units.length - usableStockCount;
+  const summary: AdminInventoryProductSummary = {
+    product_id: row.id,
+    product_name: row.name,
+    product_slug: row.slug,
+    availability_mode: row.availability_mode,
+    usable_stock_count: usableStockCount,
+    total_inventory_units: units.length,
+    unavailable_count: unavailableCount,
+    needs_cleaning_count: needsCleaningCount,
+    maintenance_count: maintenanceCount,
+    status_summary: getInventoryStatusSummary({
+      usableStockCount,
+      needsCleaningCount,
+      maintenanceCount,
+    }),
+  };
+
+  return { summary, units };
+}
+
 export async function getAdminOrders(): Promise<AdminOrderListItem[]> {
   const { supabase } = await requireVerifiedAdminSession();
   const { data, error } = await supabase
@@ -156,6 +254,46 @@ export async function getAdminOrders(): Promise<AdminOrderListItem[]> {
   }
 
   return ((data ?? []) as AdminOrderRow[]).map(mapOrderRow);
+}
+
+export async function getAdminInventoryOverview(): Promise<AdminInventoryOverview> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      `
+        id,
+        name,
+        slug,
+        availability_mode,
+        inventory (
+          item_id,
+          product_id,
+          brand,
+          model,
+          serial_number,
+          source,
+          condition,
+          status,
+          cleaning_status,
+          current_order_id,
+          notes
+        )
+      `
+    )
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error("Could not load admin inventory.");
+  }
+
+  const mapped = ((data ?? []) as AdminInventoryProductRow[]).map(mapInventoryProductRow);
+
+  return {
+    products: mapped.map((item) => item.summary),
+    units: mapped.flatMap((item) => item.units),
+  };
 }
 
 export async function getAdminOrderById(id: string): Promise<AdminOrderDetail | null> {

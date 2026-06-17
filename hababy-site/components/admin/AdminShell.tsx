@@ -20,6 +20,9 @@ export function AdminShell({
             <Link className="btn btn-secondary" href="/admin/orders">
               Orders
             </Link>
+            <Link className="btn btn-secondary" href="/admin/inventory">
+              Inventory
+            </Link>
             <form action={signOutAdmin}>
               <button className="btn btn-primary" type="submit">
                 Sign out

@@ -347,6 +347,7 @@ Current safe default Playwright scope:
 [ ] The phone input is visible
 [ ] /supabase-test loads
 [ ] Logged-out /admin/orders redirects to /admin/login
+[ ] Logged-out /admin/inventory redirects to /admin/login
 [ ] /admin/login loads
 [ ] /admin/orders is not publicly visible without login
 ```
@@ -360,6 +361,11 @@ Admin WhatsApp handoff checks may run as authenticated, non-mutating Playwright 
 `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present. These tests may verify that the handoff
 section and copy button are visible on an existing order detail page, but they must not click the
 external WhatsApp link or send messages.
+
+Admin inventory visibility checks may run as authenticated, non-mutating Playwright tests when
+`E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present. These tests may verify that the inventory
+page loads and shows a read-only table or empty state, but they must not edit inventory, reserve
+inventory, or change product availability.
 
 Recommended Codex behavior:
 
@@ -988,6 +994,24 @@ Admin WhatsApp handoff tests:
 [ ] Admin can record amount received
 [ ] Admin can add payment notes
 [ ] Admin can add internal notes
+```
+
+## Inventory Admin Visibility Tests
+
+```text
+[ ] Logged-out users cannot access /admin/inventory
+[ ] Authenticated admins can open /admin/inventory
+[ ] Admin navigation includes Orders and Inventory
+[ ] Inventory page shows product-level usable stock counts
+[ ] Inventory page shows total inventory unit counts
+[ ] Inventory page shows item status
+[ ] Inventory page shows cleaning status
+[ ] Inventory page shows whether each unit is usable for requests
+[ ] Inventory page is read-only
+[ ] Inventory page does not edit inventory
+[ ] Inventory page does not reserve inventory
+[ ] Inventory page does not change current_order_id
+[ ] Inventory reads use the authenticated admin RLS client
 ```
 
 Test statuses:

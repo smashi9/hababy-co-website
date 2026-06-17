@@ -1917,3 +1917,47 @@ npm run test:e2e
 ```
 
 Check results are recorded in the Codex milestone summary.
+
+## Entry 042 — Milestone 040 Admin Inventory Visibility Added
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Next.js / Supabase authenticated RLS client / Playwright
+
+**Task attempted:** Add a read-only admin inventory visibility page.
+
+**What was done:**
+
+* Added a protected admin route at:
+
+```text
+hababy-site/app/admin/(protected)/inventory/page.tsx
+```
+
+* Added read-only inventory summary and table components.
+* Added inventory types for admin product summaries and inventory units.
+* Added an authenticated admin RLS query for products with inventory units.
+* Added Inventory to the admin navigation next to Orders.
+* Displayed product-level usable stock counts, total inventory units, unavailable counts, cleaning counts, maintenance counts, item status, cleaning status, serial/source/condition/notes, and whether each unit is usable for requests.
+* Defined usable inventory in the UI as `status = available`, `cleaning_status = clean`, and `current_order_id is null`.
+* Added non-mutating Playwright checks for logged-out `/admin/inventory` protection and authenticated inventory visibility when e2e admin credentials are present.
+* Updated the test plan and change log.
+* Did not edit inventory.
+* Did not reserve inventory.
+* Did not change `current_order_id`.
+* Did not add product CRUD.
+* Did not add SQL.
+* Did not run SQL.
+* Did not use the service-role client.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex milestone summary.
