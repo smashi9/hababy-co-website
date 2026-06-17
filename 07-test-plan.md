@@ -327,12 +327,33 @@ E2E_ADMIN_PASSWORD
 
 Automated tests should avoid creating production data by default. Tests that create real customer, order, inventory, or admin records must be explicitly marked, disabled by default, or configured to use a disposable/test Supabase project with cleanup.
 
-Recommended Codex behavior once Playwright is installed:
+Current Playwright commands:
+
+```text
+npm run test:e2e
+npm run test:e2e:headed
+```
+
+Current safe default Playwright scope:
+
+```text
+[ ] Homepage loads
+[ ] /products loads
+[ ] /products/travel-cot loads
+[ ] /request loads
+[ ] /request?product=travel-cot loads without submitting the form
+[ ] /supabase-test loads
+[ ] Logged-out /admin/orders redirects to /admin/login
+[ ] /admin/login loads
+[ ] /admin/orders is not publicly visible without login
+```
+
+Recommended Codex behavior:
 
 ```text
 1. Run npm run lint.
 2. Run npm run build.
-3. Run npm run test:e2e if available.
+3. Run npm run test:e2e.
 4. Summarize any browser failures with route, expected behavior, actual behavior, and whether manual testing should proceed.
 ```
 

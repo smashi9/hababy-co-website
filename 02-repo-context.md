@@ -359,6 +359,7 @@ Tailwind CSS 4
 Supabase JS
 Supabase SSR Auth helpers
 Zod
+Playwright test runner
 ```
 
 Admin access uses:
@@ -377,6 +378,8 @@ The new admin review surface does not use the service-role key.
 Existing public request saving still uses the server-only service-role helper.
 The human owner must create the real Supabase Auth admin user and active admin_users row.
 The admin route guard uses Next.js 16 `proxy.ts` with a `/admin/:path*` matcher.
+Playwright smoke tests live in `hababy-site/tests/e2e/` and run with `npm run test:e2e`.
+Authenticated admin e2e checks are skipped unless `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present in the test environment.
 ```
 
 ## Decisions Already Made

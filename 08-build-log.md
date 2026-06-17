@@ -1674,3 +1674,67 @@ The project now has a documented place for Playwright in the Level 2 AI workflow
 **Checks run:**
 
 No app checks were needed because this was a documentation-only workflow update and Playwright is not installed yet.
+
+## Entry 038 — Playwright Smoke Tests Installed
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Playwright
+
+**Task attempted:** Install Playwright and add the first automated browser QA smoke tests for safe route and admin-access checks.
+
+**What was done:**
+
+* Installed `@playwright/test` as a development dependency.
+* Added Playwright config inside `hababy-site/`.
+* Added npm scripts:
+  * `npm run test:e2e`
+  * `npm run test:e2e:headed`
+* Added public smoke tests for:
+  * homepage
+  * `/products`
+  * `/products/travel-cot`
+  * `/request`
+  * `/request?product=travel-cot`
+  * `/supabase-test`
+* Added logged-out admin smoke tests for:
+  * `/admin/orders` redirects to `/admin/login`
+  * `/admin/login` loads
+  * `/admin/orders` is not publicly visible without login
+* Added optional authenticated admin tests that run only when `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present.
+* Added e2e credential placeholders to `.env.example` only.
+* Did not store credentials in the repository.
+* Did not create real order submissions.
+* Did not add payment, admin mutation, inventory reservation, status update, or WhatsApp tests.
+* Did not run SQL.
+* Did not edit Supabase SQL files.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Safety boundary:**
+
+The default e2e suite is read-only. It verifies route loading and admin access protection, but it does not submit customer forms or create Supabase order/customer data.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npx playwright install chromium
+npm run test:e2e
+```
+
+`npm run lint` passed.
+
+`npm run build` passed.
+
+The first `npm run test:e2e` attempt correctly reported that Playwright browser binaries were missing. `npx playwright install chromium` was run to install the Chromium test browser.
+
+After Chromium was installed, `npm run test:e2e` passed:
+
+```text
+9 passed
+1 skipped
+```
+
+The skipped test was the optional authenticated admin flow because `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` were not present in the test environment.
