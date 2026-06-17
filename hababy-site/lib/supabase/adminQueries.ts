@@ -9,6 +9,7 @@ import type {
   AdminOrderListItem,
   SelectedProductSnapshot,
 } from "@/types/order";
+import type { OrderStatusUpdateInput } from "@/lib/validation/orderStatusSchema";
 
 type AdminAccessResult = {
   supabase: SupabaseClient;
@@ -202,4 +203,37 @@ export async function getAdminOrderById(id: string): Promise<AdminOrderDetail | 
   }
 
   return data ? mapOrderRow(data as AdminOrderRow) : null;
+}
+
+export async function updateAdminOrderStatus({
+  orderId,
+  targetStatus,
+}: OrderStatusUpdateInput): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("orders")
+    .update({
+      status: targetStatus,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", orderId)
+    .eq("status", "new")
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      message: "Could not update this request status. Please refresh and try again.",
+    };
+  }
+
+  if (!data?.id) {
+    return {
+      ok: false,
+      message: "This request can no longer be changed here because it is not new.",
+    };
+  }
+
+  return { ok: true };
 }

@@ -348,6 +348,11 @@ Current safe default Playwright scope:
 [ ] /admin/orders is not publicly visible without login
 ```
 
+Admin status update tests are intentionally not part of the default Playwright smoke suite because
+they mutate order data. Any future automated status mutation test must be skipped by default or gated
+behind explicit disposable/test Supabase credentials and must never run against production by
+accident.
+
 Recommended Codex behavior:
 
 ```text
@@ -934,7 +939,10 @@ WhatsApp is a communication handoff, not the database of record.
 ```text
 [ ] Admin can view order list
 [ ] Admin can open order detail
-[ ] Admin can update order status
+[ ] Admin can update a new order status to confirmed
+[ ] Admin can update a new order status to cancelled
+[ ] Admin cannot update non-new orders in the Milestone 037 status action UI
+[ ] Admin status updates use authenticated RLS access, not service role
 [ ] Admin can edit delivery fee
 [ ] Admin can edit urgent fee
 [ ] Admin can edit deposit

@@ -1738,3 +1738,65 @@ After Chromium was installed, `npm run test:e2e` passed:
 ```
 
 The skipped test was the optional authenticated admin flow because `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` were not present in the test environment.
+
+## Entry 039 — Milestone 037 Admin Status Updates Added
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Next.js / Supabase Auth
+
+**Task attempted:** Add the first admin-only order lifecycle mutation so a new request can be marked confirmed or cancelled.
+
+**What was done:**
+
+* Added server-side validation for order status updates.
+* Added an admin mutation helper that re-verifies admin access before updating an order.
+* Used the authenticated RLS Supabase client for the admin status update path.
+* Added an atomic stale-order guard so updates only apply when:
+  * `id = orderId`
+  * `status = new`
+* Added a server action for order status updates.
+* Revalidated `/admin/orders` and the relevant order detail page after a successful update.
+* Added order detail actions:
+  * `Confirm request`
+  * `Cancel request`
+* Showed status actions only for orders with status `new`.
+* Showed a read-only status note for non-new orders.
+* Updated the test plan to clarify that status mutation tests are not part of the default Playwright smoke suite.
+* Updated the change log because admin order lifecycle behavior changed.
+* Did not add `reviewing`.
+* Did not add new status values.
+* Did not reserve inventory.
+* Did not update `inventory.current_order_id`.
+* Did not add WhatsApp handoff.
+* Did not add payment or checkout UI.
+* Did not use the service-role client for admin status updates.
+* Did not run SQL.
+* Did not edit Supabase SQL files.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Result:**
+
+Admin order detail pages now allow the owner to move a saved request from `new` to either `confirmed` or `cancelled`, while preserving RLS-based admin authorization and the non-automated request-first workflow.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+`npm run lint` passed.
+
+`npm run build` passed.
+
+`npm run test:e2e` passed:
+
+```text
+9 passed
+1 skipped
+```
+
+The skipped test was the optional authenticated admin flow because `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` were not present in the test environment. No status-mutation Playwright tests were added to the default suite.

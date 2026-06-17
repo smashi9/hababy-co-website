@@ -1,4 +1,5 @@
 import type { AdminOrderDetail } from "@/types/order";
+import { OrderStatusActions } from "./OrderStatusActions";
 import { formatDate, formatDateTime, formatLabel, formatMoney, orderReference } from "./orderFormat";
 
 function DetailField({ label, value }: { label: string; value: React.ReactNode }) {
@@ -24,6 +25,21 @@ export function OrderDetailView({ order }: { order: AdminOrderDetail }) {
           <p className="mt-3 text-sm font-bold text-ink/65">
             Created {formatDateTime(order.created_at)}
           </p>
+        </div>
+        <div className="w-full sm:max-w-sm">
+          {order.status === "new" ? (
+            <OrderStatusActions orderId={order.id} />
+          ) : (
+            <div className="rounded-2xl border border-taupe/25 bg-white p-4">
+              <p className="text-xs font-black uppercase tracking-wide text-ink/58">
+                Status actions
+              </p>
+              <p className="mt-2 text-sm font-bold leading-6 text-ink/70">
+                This request is {formatLabel(order.status)}. Status changes are only available for
+                new requests in this milestone.
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -253,3 +253,32 @@ Owner confirmation/QC gate:
 **Scope decision:** This milestone is read-only. It does not add status changes, inventory reservation, WhatsApp handoff, product/settings CRUD, payment UI, schema changes, or SQL.
 
 **Status:** Accepted
+
+## Change 009 — Admin Can Confirm or Cancel New Requests
+
+**Date:** 17 June 2026
+
+**Change type:** Admin behavior / order lifecycle
+
+**Summary:** Added admin-only status actions on order detail pages for moving a new request to either confirmed or cancelled.
+
+**Reason:** The owner needs the first safe lifecycle action after reviewing a saved request, while preserving the request-first pilot model and avoiding inventory automation.
+
+**Files affected:**
+
+* `hababy-site/app/admin/(protected)/orders/actions.ts`
+* `hababy-site/components/admin/OrderDetailView.tsx`
+* `hababy-site/components/admin/OrderStatusActions.tsx`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/lib/validation/orderStatusSchema.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Only `new -> confirmed` and `new -> cancelled` are allowed in this milestone. The update path re-verifies admin access and uses the authenticated RLS Supabase client.
+
+**Stale-order decision:** Status updates are guarded by both order id and `status = new`. If an order is no longer new, the admin receives a friendly failure message and no update occurs.
+
+**Scope decision:** This milestone does not add `reviewing`, does not reserve inventory, does not update `inventory.current_order_id`, does not add WhatsApp handoff, and does not add payment or checkout UI.
+
+**Status:** Accepted
