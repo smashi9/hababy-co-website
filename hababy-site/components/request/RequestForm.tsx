@@ -2,10 +2,16 @@
 
 import { useActionState, useState } from "react";
 import Link from "next/link";
+import PhoneInput, { getCountries, type Country, type Value } from "react-phone-number-input";
+import labels from "react-phone-number-input/locale/en";
 import { submitBookingRequest } from "@/app/request/actions";
 import { calculateRentalEstimate, getRentalDays } from "@/lib/pricing/estimate";
 import type { RequestActionState } from "@/app/request/actions";
 import type { ProductSummary } from "@/lib/supabase/queries";
+
+const countryOptions = getCountries().sort((firstCountry, secondCountry) =>
+  (labels[firstCountry] ?? firstCountry).localeCompare(labels[secondCountry] ?? secondCountry)
+) as Country[];
 
 const deliveryTypes = [
   { label: "Home", value: "home" },
@@ -105,6 +111,7 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
   const [selectedSlug, setSelectedSlug] = useState(getFirstValue(initialProductSlug));
   const [rentalStartDate, setRentalStartDate] = useState("");
   const [rentalEndDate, setRentalEndDate] = useState("");
+  const [phone, setPhone] = useState<Value | undefined>();
 
   const selectedProduct = products.find((product) => product.slug === selectedSlug);
   const availableProducts = products.filter(
@@ -354,7 +361,7 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
           </label>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <label className="grid gap-2 text-sm font-black text-ink">
             Customer name
             <input
@@ -365,16 +372,32 @@ export function RequestForm({ products, initialProductSlug }: RequestFormProps) 
             />
             <FieldError errors={actionState.fieldErrors?.customerName} />
           </label>
-          <label className="grid gap-2 text-sm font-black text-ink">
-            Phone
-            <input
-              name="phone"
-              type="tel"
-              className="min-h-12 rounded-xl border border-taupe/35 bg-white px-4 py-3 font-semibold text-ink outline-primary"
-              required
+          <fieldset className="grid gap-2 border-0 p-0 text-sm font-black text-ink">
+            <legend>Phone</legend>
+            <PhoneInput
+              id="phoneDisplay"
+              className="request-phone-input"
+              countries={countryOptions}
+              countryOptionsOrder={countryOptions}
+              defaultCountry="MA"
+              international
+              labels={labels}
+              limitMaxLength
+              value={phone}
+              onChange={setPhone}
+              numberInputProps={{
+                autoComplete: "tel",
+                id: "phoneDisplay",
+                inputMode: "tel",
+                required: true,
+              }}
             />
+            <input name="phone" type="hidden" value={phone ?? ""} />
+            <p className="text-xs font-bold leading-5 text-ink/60">
+              Hababy & Co uses this for manual phone or WhatsApp follow-up after review.
+            </p>
             <FieldError errors={actionState.fieldErrors?.phone} />
-          </label>
+          </fieldset>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">

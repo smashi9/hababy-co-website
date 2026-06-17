@@ -1871,3 +1871,49 @@ npm run test:e2e
 ```
 
 The authenticated admin checks ran because local e2e admin credentials were present. The new WhatsApp handoff check only verified that the section appears on an existing order detail page; it did not click the external WhatsApp link and did not send a message.
+
+## Entry 041 — Milestone 039 Phone and Contact Hardening Added
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Next.js / Playwright
+
+**Task attempted:** Improve phone/contact handling for the public request flow and admin WhatsApp handoff without adding OTP, SMS providers, or WhatsApp API integration.
+
+**What was done:**
+
+* Added a reusable phone contact helper at:
+
+```text
+hababy-site/lib/contact/phone.ts
+```
+
+* Added `react-phone-number-input` for a full international phone country selector.
+* Replaced the small custom country-code dropdown and removed the awkward `Other / full international` option.
+* Set Morocco as the default selected country.
+* Ordered the country selector alphabetically by country name.
+* Added server-side phone normalization so new request submissions store a normalized international-style phone value starting with `+`.
+* Added simple server-side rejection for missing, too-short, malformed, or text-based phone values.
+* Added Morocco-specific handling for local `06` and `07` phone values, plus `00212` international prefix handling.
+* Updated WhatsApp handoff URL phone conversion to use the shared phone helper.
+* Updated Playwright smoke coverage to verify the request page shows the international phone selector, defaults to Morocco, and keeps the phone input visible without submitting the form.
+* Updated the test plan and change log for the user-facing request-flow contact change.
+* Did not add OTP.
+* Did not add SMS providers.
+* Did not add WhatsApp API integration.
+* Did not add automatic phone verification.
+* Did not create real requests in automated tests.
+* Did not edit Supabase SQL files.
+* Did not run SQL.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex milestone summary.

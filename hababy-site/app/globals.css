@@ -183,3 +183,43 @@ button {
   border-radius: 1rem;
   line-height: 1.45;
 }
+
+.request-phone-input {
+  align-items: stretch;
+  background: white;
+  border: 1px solid rgb(168 158 148 / 0.35);
+  border-radius: 0.75rem;
+  display: flex;
+  min-height: 3rem;
+  overflow: hidden;
+}
+
+.request-phone-input:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.request-phone-input .PhoneInputCountry {
+  border-right: 1px solid rgb(168 158 148 / 0.28);
+  margin: 0;
+  padding-inline: 0.75rem;
+}
+
+.request-phone-input .PhoneInputCountrySelect {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.request-phone-input .PhoneInputInput {
+  background: transparent;
+  color: var(--color-ink);
+  flex: 1;
+  font-weight: 700;
+  min-width: 0;
+  outline: none;
+  padding: 0.75rem 1rem;
+}
+
+.request-phone-input .PhoneInputInput::placeholder {
+  color: rgb(51 51 51 / 0.42);
+}

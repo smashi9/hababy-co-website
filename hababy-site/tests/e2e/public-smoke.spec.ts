@@ -27,6 +27,9 @@ test.describe("public smoke routes", () => {
     await page.goto("/request?product=travel-cot");
     await expect(page.getByRole("heading", { name: /Send a request for available Hababy & Co gear/i })).toBeVisible();
     await expect(page.locator("select[name='selectedProductSlug']")).toHaveValue("travel-cot");
+    await expect(page.locator(".request-phone-input select")).toBeVisible();
+    await expect(page.locator(".request-phone-input select")).toHaveValue("MA");
+    await expect(page.locator("#phoneDisplay")).toBeVisible();
   });
 
   test("/supabase-test loads", async ({ page }) => {

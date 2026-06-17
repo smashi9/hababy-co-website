@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito, Playfair_Display } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import "react-phone-number-input/style.css";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({

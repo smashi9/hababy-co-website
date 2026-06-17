@@ -1,4 +1,5 @@
 import type { AdminOrderDetail, SelectedProductSnapshot } from "@/types/order";
+import { phoneToWhatsAppDigits } from "@/lib/contact/phone";
 
 type WhatsAppDraftType = "new" | "confirmed" | "cancelled";
 
@@ -69,25 +70,7 @@ function getDraftType(status: string | null): WhatsAppDraftType {
 }
 
 export function normalizeWhatsAppPhone(phone: string | null | undefined) {
-  if (!phone) {
-    return null;
-  }
-
-  let digits = phone.replace(/\D/g, "");
-
-  if (digits.startsWith("00")) {
-    digits = digits.slice(2);
-  }
-
-  if (digits.startsWith("0") && digits.length === 10) {
-    digits = `212${digits.slice(1)}`;
-  }
-
-  if (/^[567]\d{8}$/.test(digits)) {
-    digits = `212${digits}`;
-  }
-
-  return /^\d{8,15}$/.test(digits) ? digits : null;
+  return phoneToWhatsAppDigits(phone);
 }
 
 export function createWhatsAppHandoffDraft(order: AdminOrderDetail): WhatsAppHandoffDraft {

@@ -310,3 +310,36 @@ Owner confirmation/QC gate:
 **Payment decision:** Drafts keep payment offline and do not include online payment links.
 
 **Status:** Accepted
+
+## Change 011 — Request Phone Contact Hardening Added
+
+**Date:** 17 June 2026
+
+**Change type:** Customer request flow / admin communication
+
+**Summary:** Added a full international phone input and server-side phone normalization to the public request form.
+
+**Reason:** Hababy & Co needs more reliable customer phone numbers for manual phone or WhatsApp follow-up while keeping the pilot request-first and manually reviewed.
+
+**Files affected:**
+
+* `hababy-site/app/request/actions.ts`
+* `hababy-site/app/layout.tsx`
+* `hababy-site/components/request/RequestForm.tsx`
+* `hababy-site/lib/contact/phone.ts`
+* `hababy-site/lib/validation/requestSchema.ts`
+* `hababy-site/lib/whatsapp/message.ts`
+* `hababy-site/package.json`
+* `hababy-site/package-lock.json`
+* `hababy-site/tests/e2e/public-smoke.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Decision:** Use `react-phone-number-input` for the full country selector, ordered alphabetically by country name, with Morocco selected by default. Store new submitted phone numbers in normalized international-style format starting with `+`.
+
+**Morocco decision:** Local `06` and `07` numbers are normalized to `+2126...` and `+2127...` as a server-side fallback. `00212...` values are normalized to `+212...`.
+
+**Safety decision:** This change does not add OTP, SMS providers, WhatsApp API integration, automatic sending, or automatic phone verification. Fake or unreachable numbers remain part of human review before confirmation.
+
+**Status:** Accepted

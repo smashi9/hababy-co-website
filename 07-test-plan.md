@@ -342,6 +342,9 @@ Current safe default Playwright scope:
 [ ] /products/travel-cot loads
 [ ] /request loads
 [ ] /request?product=travel-cot loads without submitting the form
+[ ] /request?product=travel-cot shows the international phone selector
+[ ] The phone country selector defaults to Morocco
+[ ] The phone input is visible
 [ ] /supabase-test loads
 [ ] Logged-out /admin/orders redirects to /admin/login
 [ ] /admin/login loads
@@ -713,10 +716,26 @@ Test fields:
 
 ```text
 [ ] Name
+[ ] Country code
 [ ] Phone
 [ ] Email, optional
 [ ] Preferred language
 [ ] Payment method preference
+```
+
+Phone/contact expectations:
+
+```text
+[ ] Full international country selector is available
+[ ] Country list is ordered alphabetically by country name
+[ ] Morocco is selected by default
+[ ] The awkward Other/manual option is not present
+[ ] Phone is required
+[ ] Server validation rejects obviously invalid, too-short, or text-only phone values
+[ ] New submissions store phone in normalized international format starting with +
+[ ] Morocco local 06/07 numbers normalize to +2126/+2127
+[ ] 00212 numbers normalize to +212
+[ ] No OTP, SMS provider, WhatsApp API, or automatic verification is added
 ```
 
 Payment methods visible:

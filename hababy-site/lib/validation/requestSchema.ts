@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizePhoneNumber } from "@/lib/contact/phone";
 
 export const deliveryTypeValues = [
   "home",
@@ -62,11 +63,7 @@ export const requestFormSchema = z
     deliveryWindow: z.enum(deliveryWindowValues, "Choose a valid delivery window."),
     pickupWindow: z.enum(deliveryWindowValues, "Choose a valid pickup window."),
     customerName: z.string().trim().min(1, "Enter your name."),
-    phone: z
-      .string()
-      .trim()
-      .min(7, "Enter a valid phone number.")
-      .regex(/^[+()\d\s.-]+$/, "Enter a valid phone number."),
+    phone: z.string().trim().min(1, "Enter a phone number."),
     email: z
       .string()
       .trim()
@@ -96,6 +93,25 @@ export const requestFormSchema = z
   .refine((data) => isAtLeast24HoursAhead(data.rentalStartDate), {
     path: ["rentalStartDate"],
     message: "Same-day requests are not available during the pilot. Please request at least 24 hours ahead.",
+  })
+  .transform((data, ctx) => {
+    const normalizedPhone = normalizePhoneNumber({
+      phone: data.phone,
+    });
+
+    if (!normalizedPhone.ok) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["phone"],
+        message: normalizedPhone.message,
+      });
+      return z.NEVER;
+    }
+
+    return {
+      ...data,
+      phone: normalizedPhone.phone,
+    };
   });
 
 export type RequestFormInput = z.infer<typeof requestFormSchema>;
