@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { AdminInventoryUnit } from "@/types/inventory";
 import { formatLabel } from "./orderFormat";
 
@@ -31,6 +32,7 @@ export function InventoryTable({ units }: { units: AdminInventoryUnit[] }) {
             <th className="px-4 py-3">Serial</th>
             <th className="px-4 py-3">Condition</th>
             <th className="px-4 py-3">Source / notes</th>
+            <th className="px-4 py-3">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-taupe/20">
@@ -64,6 +66,17 @@ export function InventoryTable({ units }: { units: AdminInventoryUnit[] }) {
                 {unit.current_order_id ? (
                   <p className="mt-2 text-primary">Linked order: {unit.current_order_id}</p>
                 ) : null}
+              </td>
+              <td className="px-4 py-4">
+                {unit.current_order_id ? (
+                  <p className="text-xs font-black uppercase tracking-wide text-ink/55">
+                    Linked / read-only
+                  </p>
+                ) : (
+                  <Link className="btn btn-secondary" href={`/admin/inventory/${unit.item_id}`}>
+                    Edit
+                  </Link>
+                )}
               </td>
             </tr>
           ))}

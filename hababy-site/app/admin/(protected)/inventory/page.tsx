@@ -8,11 +8,12 @@ export default async function AdminInventoryPage() {
   return (
     <div className="grid gap-8">
       <div>
-        <p className="badge">Read-only</p>
+        <p className="badge">Operational state</p>
         <h1 className="mt-4 font-heading text-4xl text-ink">Inventory visibility</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-ink/72">
-          View product-level stock and physical inventory units. This page does not edit inventory,
-          reserve items, change cleaning status, or change product availability.
+          View product-level stock and physical inventory units. Existing units can be updated for
+          operational state only; this page does not reserve items, create units, delete units, or
+          edit product records.
         </p>
       </div>
 

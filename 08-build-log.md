@@ -1918,6 +1918,55 @@ npm run test:e2e
 
 Check results are recorded in the Codex milestone summary.
 
+## Entry 043 — Milestone 041 Admin Inventory Editing Foundation Added
+
+**Date:** 17 June 2026
+
+**Tool used:** Codex / Next.js / Supabase authenticated RLS client / Zod / Playwright
+
+**Task attempted:** Add admin-only editing for the operational state of existing inventory items.
+
+**What was done:**
+
+* Added a Zod validation schema for inventory updates.
+* Added an admin server action for inventory item updates.
+* Added a protected inventory item edit route at:
+
+```text
+hababy-site/app/admin/(protected)/inventory/[itemId]/page.tsx
+```
+
+* Added an inventory edit form for existing units.
+* Added admin query helpers to load one inventory item and update an item.
+* Re-verified admin inside the update helper with `requireVerifiedAdminSession()`.
+* Used the authenticated RLS Supabase client, not the service-role client.
+* Keyed inventory item updates on `item_id`.
+* Atomically blocked linked items with `item_id` plus `current_order_id is null`.
+* Updated only `status`, `cleaning_status`, `condition`, `source`, and `notes`.
+* Added edit links for inventory rows that are not linked to an order.
+* Showed linked/read-only messaging instead of an edit affordance for linked inventory rows.
+* Added non-mutating Playwright coverage for opening an inventory edit page when editable rows exist.
+* Updated the test plan and change log.
+* Did not write `current_order_id`.
+* Did not reserve inventory.
+* Did not create inventory units.
+* Did not delete inventory units.
+* Did not add product CRUD.
+* Did not add SQL.
+* Did not run SQL.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex milestone summary.
+
 ## Entry 042 — Milestone 040 Admin Inventory Visibility Added
 
 **Date:** 17 June 2026

@@ -20,6 +20,7 @@ export type AdminInventoryUnit = {
   brand: string | null;
   model: string | null;
   serial_number: string | null;
+  purchase_date?: string | null;
   source: string | null;
   condition: string | null;
   status: InventoryStatus;
@@ -45,4 +46,8 @@ export type AdminInventoryProductSummary = {
 export type AdminInventoryOverview = {
   products: AdminInventoryProductSummary[];
   units: AdminInventoryUnit[];
+};
+
+export type AdminInventoryItemDetail = AdminInventoryUnit & {
+  purchase_date: string | null;
 };

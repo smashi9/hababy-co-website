@@ -11,12 +11,14 @@ import type {
 } from "@/types/order";
 import type {
   AdminInventoryOverview,
+  AdminInventoryItemDetail,
   AdminInventoryProductSummary,
   AdminInventoryUnit,
   InventoryCleaningStatus,
   InventoryStatus,
 } from "@/types/inventory";
 import type { OrderStatusUpdateInput } from "@/lib/validation/orderStatusSchema";
+import type { InventoryUpdateInput } from "@/lib/validation/inventoryUpdateSchema";
 
 type AdminAccessResult = {
   supabase: SupabaseClient;
@@ -42,12 +44,28 @@ type AdminInventoryUnitRow = {
   brand: string | null;
   model: string | null;
   serial_number: string | null;
+  purchase_date: string | null;
   source: string | null;
   condition: string | null;
   status: InventoryStatus;
   cleaning_status: InventoryCleaningStatus;
   current_order_id: string | null;
   notes: string | null;
+};
+
+type AdminInventoryItemRow = AdminInventoryUnitRow & {
+  product:
+    | {
+    id: string;
+    name: string;
+    slug: string;
+      }
+    | {
+        id: string;
+        name: string;
+        slug: string;
+      }[]
+    | null;
 };
 
 export async function hasAdminUserAccess(supabase: SupabaseClient, user: User) {
@@ -272,6 +290,7 @@ export async function getAdminInventoryOverview(): Promise<AdminInventoryOvervie
           brand,
           model,
           serial_number,
+          purchase_date,
           source,
           condition,
           status,
@@ -294,6 +313,101 @@ export async function getAdminInventoryOverview(): Promise<AdminInventoryOvervie
     products: mapped.map((item) => item.summary),
     units: mapped.flatMap((item) => item.units),
   };
+}
+
+function mapInventoryItemRow(row: AdminInventoryItemRow): AdminInventoryItemDetail {
+  const product = Array.isArray(row.product) ? row.product[0] ?? null : row.product;
+
+  return {
+    item_id: row.item_id,
+    product_id: row.product_id,
+    product_name: product?.name ?? "Unlinked product",
+    product_slug: product?.slug ?? null,
+    brand: row.brand,
+    model: row.model,
+    serial_number: row.serial_number,
+    purchase_date: row.purchase_date,
+    source: row.source,
+    condition: row.condition,
+    status: row.status,
+    cleaning_status: row.cleaning_status,
+    current_order_id: row.current_order_id,
+    notes: row.notes,
+    usable_for_request: isInventoryUnitUsable(row),
+  };
+}
+
+export async function getAdminInventoryItemById(
+  itemId: string
+): Promise<AdminInventoryItemDetail | null> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("inventory")
+    .select(
+      `
+        item_id,
+        product_id,
+        brand,
+        model,
+        serial_number,
+        purchase_date,
+        source,
+        condition,
+        status,
+        cleaning_status,
+        current_order_id,
+        notes,
+        product:products (
+          id,
+          name,
+          slug
+        )
+      `
+    )
+    .eq("item_id", itemId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error("Could not load this inventory item.");
+  }
+
+  return data ? mapInventoryItemRow(data as unknown as AdminInventoryItemRow) : null;
+}
+
+export async function updateAdminInventoryItem(
+  input: InventoryUpdateInput
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("inventory")
+    .update({
+      status: input.status,
+      cleaning_status: input.cleaning_status,
+      condition: input.condition,
+      notes: input.notes,
+      source: input.source,
+    })
+    .eq("item_id", input.itemId)
+    .is("current_order_id", null)
+    .select("item_id")
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      message: "Could not update this inventory item. Please refresh and try again.",
+    };
+  }
+
+  if (!data?.item_id) {
+    return {
+      ok: false,
+      message:
+        "This inventory item was not updated because it is missing or linked to an order.",
+    };
+  }
+
+  return { ok: true };
 }
 
 export async function getAdminOrderById(id: string): Promise<AdminOrderDetail | null> {

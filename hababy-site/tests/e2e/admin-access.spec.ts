@@ -89,9 +89,32 @@ test.describe("authenticated admin access", () => {
 
     await expect(page).toHaveURL(/\/admin\/inventory/);
     await expect(page.getByRole("heading", { name: /Inventory visibility/i })).toBeVisible();
-    await expect(page.getByText(/This page does not edit inventory/i)).toBeVisible();
+    await expect(page.getByText(/operational state only/i)).toBeVisible();
     await expect(
       page.getByRole("table").or(page.getByText(/No inventory units found/i))
     ).toBeVisible();
+  });
+
+  test("admin can open an inventory edit page without mutating data", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByLabel(/Email/i).fill(adminEmail ?? "");
+    await page.getByLabel(/Password/i).fill(adminPassword ?? "");
+    await page.getByRole("button", { name: /^Sign in$/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/orders/);
+    await page.goto("/admin/inventory");
+
+    const firstEditLink = page.getByRole("link", { name: /^Edit$/i }).first();
+
+    if ((await firstEditLink.count()) === 0) {
+      test.skip(true, "No editable inventory rows available for the non-mutating edit-page check.");
+    }
+
+    await firstEditLink.click();
+    await expect(page).toHaveURL(/\/admin\/inventory\/[0-9a-f-]+/);
+    await expect(page.getByRole("heading", { name: /Inventory item/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Save inventory state/i })).toBeVisible();
+    await expect(page.getByLabel(/Item status/i)).toBeVisible();
+    await expect(page.getByLabel(/Cleaning status/i)).toBeVisible();
   });
 });

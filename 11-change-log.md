@@ -374,3 +374,36 @@ Owner confirmation/QC gate:
 **Scope decision:** This milestone does not edit inventory, reserve inventory, change `current_order_id`, add product CRUD, add SQL, or run SQL.
 
 **Status:** Accepted
+
+## Change 013 — Admin Inventory State Editing Added
+
+**Date:** 17 June 2026
+
+**Change type:** Admin workflow / inventory operations
+
+**Summary:** Added admin-only editing for existing inventory item operational state.
+
+**Reason:** The owner needs to update whether existing inventory items are available, cleaning, out, maintenance, retired, and to maintain condition/source/notes without using Supabase directly.
+
+**Files affected:**
+
+* `hababy-site/app/admin/(protected)/inventory/[itemId]/page.tsx`
+* `hababy-site/app/admin/(protected)/inventory/actions.ts`
+* `hababy-site/app/admin/(protected)/inventory/page.tsx`
+* `hababy-site/components/admin/InventoryEditForm.tsx`
+* `hababy-site/components/admin/InventoryTable.tsx`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/lib/validation/inventoryUpdateSchema.ts`
+* `hababy-site/types/inventory.ts`
+* `hababy-site/tests/e2e/admin-access.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Editable fields decision:** Admins may edit only `status`, `cleaning_status`, `condition`, `source`, and `notes`.
+
+**Read-only fields decision:** The admin UI does not edit `item_id`, `product_id`, `brand`, `model`, `serial_number`, `purchase_date`, `current_order_id`, `created_at`, or `updated_at`.
+
+**Safety decision:** Updates use the authenticated admin RLS client and are blocked when `current_order_id is not null`. This milestone does not reserve inventory, write `current_order_id`, create or delete inventory units, add product CRUD, add SQL, or run SQL.
+
+**Status:** Accepted

@@ -367,6 +367,11 @@ Admin inventory visibility checks may run as authenticated, non-mutating Playwri
 page loads and shows a read-only table or empty state, but they must not edit inventory, reserve
 inventory, or change product availability.
 
+Admin inventory edit-page checks may also run as authenticated, non-mutating Playwright tests when
+admin e2e credentials are present. The default suite may open an edit page and verify that the form
+is visible, but it must not submit inventory updates unless explicitly gated for a disposable/test
+Supabase project.
+
 Recommended Codex behavior:
 
 ```text
@@ -1012,6 +1017,22 @@ Admin WhatsApp handoff tests:
 [ ] Inventory page does not reserve inventory
 [ ] Inventory page does not change current_order_id
 [ ] Inventory reads use the authenticated admin RLS client
+```
+
+## Inventory Admin Editing Tests
+
+```text
+[ ] Admin can open an existing inventory item's edit page
+[ ] Edit page shows product/item context
+[ ] Edit page shows read-only identity fields
+[ ] Edit form allows status, cleaning status, condition, source, and notes only
+[ ] Edit form does not expose product_id, brand, model, serial_number, purchase_date, or current_order_id as editable fields
+[ ] Linked items show read-only messaging instead of an edit form
+[ ] Inventory update action re-verifies admin
+[ ] Inventory update action uses the authenticated RLS client, not service role
+[ ] Inventory update action keys on item_id
+[ ] Inventory update action blocks updates when current_order_id is not null
+[ ] Default Playwright suite does not submit inventory updates
 ```
 
 Test statuses:
