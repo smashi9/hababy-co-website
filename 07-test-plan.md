@@ -372,6 +372,20 @@ admin e2e credentials are present. The default suite may open an edit page and v
 is visible, but it must not submit inventory updates unless explicitly gated for a disposable/test
 Supabase project.
 
+Gated admin inventory mutation checks may run only when all of these are present:
+
+```text
+E2E_ADMIN_EMAIL
+E2E_ADMIN_PASSWORD
+E2E_ALLOW_MUTATING_TESTS=true
+E2E_INVENTORY_ITEM_ID
+```
+
+The gated inventory mutation test may update `notes` only on the specified existing inventory item.
+It must not change `status`, `cleaning_status`, `current_order_id`, product availability, or any
+identity fields. The normal `npm run test:e2e` path must remain safe and skipped by default unless
+the explicit mutation gate is enabled.
+
 Recommended Codex behavior:
 
 ```text
@@ -1033,6 +1047,9 @@ Admin WhatsApp handoff tests:
 [ ] Inventory update action keys on item_id
 [ ] Inventory update action blocks updates when current_order_id is not null
 [ ] Default Playwright suite does not submit inventory updates
+[ ] Gated mutation test is skipped unless E2E_ALLOW_MUTATING_TESTS=true and E2E_INVENTORY_ITEM_ID is set
+[ ] Gated mutation test updates notes only
+[ ] Gated mutation test does not change status or cleaning_status
 ```
 
 Test statuses:

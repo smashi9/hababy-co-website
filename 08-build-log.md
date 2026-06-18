@@ -1918,6 +1918,54 @@ npm run test:e2e
 
 Check results are recorded in the Codex milestone summary.
 
+## Entry 044 — Gated Inventory Edit Playwright Test Added
+
+**Date:** 18 June 2026
+
+**Tool used:** Codex / Playwright
+
+**Task attempted:** Add repeatable automated coverage for the admin inventory edit flow while keeping routine e2e runs non-mutating by default.
+
+**What was done:**
+
+* Added a gated Playwright test at:
+
+```text
+hababy-site/tests/e2e/admin-inventory-mutation.spec.ts
+```
+
+* The test runs only when all of these are present:
+
+```text
+E2E_ADMIN_EMAIL
+E2E_ADMIN_PASSWORD
+E2E_ALLOW_MUTATING_TESTS=true
+E2E_INVENTORY_ITEM_ID
+```
+
+* The gated test logs in as admin, opens `/admin/inventory/[E2E_INVENTORY_ITEM_ID]`, verifies the edit form, updates the `notes` field only, submits, checks the success message, reloads, and verifies the saved note.
+* Added placeholders to `hababy-site/.env.example` for the mutation gate.
+* Updated the test plan to clarify the mutation gate and notes-only scope.
+* Did not change inventory status.
+* Did not change cleaning status.
+* Did not write `current_order_id`.
+* Did not reserve inventory.
+* Did not create or delete inventory units.
+* Did not edit Supabase SQL files.
+* Did not run SQL.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex task summary.
+
 ## Entry 043 — Milestone 041 Admin Inventory Editing Foundation Added
 
 **Date:** 17 June 2026
