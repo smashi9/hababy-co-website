@@ -1,0 +1,20 @@
+export type AdminSettings = {
+  id: string;
+  base_currency: string;
+  whatsapp_number: string | null;
+  public_fx_note: string | null;
+  eur_rate: number | null;
+  usd_rate: number | null;
+  fx_rate_updated_at: string | null;
+  card_enabled: boolean;
+  same_day_enabled: boolean;
+  urgent_min_notice_hours: number;
+  urgent_fee_48_72: number;
+  urgent_fee_24_48: number;
+  minimum_order_value_mad: number | null;
+  discount_3_6_days_pct: number;
+  multiplier_14d: number;
+  multiplier_30d: number;
+  created_at: string | null;
+  updated_at: string | null;
+};

@@ -443,3 +443,37 @@ Owner confirmation/QC gate:
 **Safety decision:** Updates use the authenticated admin RLS client, not the service-role client. This milestone does not create or delete products, add category CRUD, upload images, add checkout/payment logic, add reservation logic, add SQL, or run SQL.
 
 **Status:** Accepted
+
+## Change 015 — Admin Settings Foundation Added
+
+**Date:** 18 June 2026
+
+**Change type:** Admin workflow / operational settings
+
+**Summary:** Added an admin-only settings page for Tier A operational settings.
+
+**Reason:** The owner needs a protected place to maintain the operational WhatsApp number, public FX note, and manual EUR/USD reference rates before these values are connected to customer-facing flows.
+
+**Files affected:**
+
+* `hababy-site/app/admin/(protected)/settings/actions.ts`
+* `hababy-site/app/admin/(protected)/settings/page.tsx`
+* `hababy-site/components/admin/AdminShell.tsx`
+* `hababy-site/components/admin/SettingsEditForm.tsx`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/lib/validation/settingsUpdateSchema.ts`
+* `hababy-site/types/settings.ts`
+* `hababy-site/tests/e2e/admin-access.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Editable fields decision:** Admins may edit only `whatsapp_number`, `public_fx_note`, `eur_rate`, and `usd_rate`.
+
+**Read-only/deferred fields decision:** Card/payment settings, delivery zones, urgent fees, same-day settings, multipliers, discounts, and all customer-facing settings integrations remain deferred.
+
+**Public consequence decision:** These settings are stored for future operational use only. They are not exposed publicly and are not live-wired into catalogue pricing, request pricing, WhatsApp handoff, checkout, or delivery workflows yet.
+
+**Safety decision:** Updates use the authenticated admin RLS client, not the service-role client. The update path targets the existing singleton settings row by `id`, never inserts or upserts, and stamps `fx_rate_updated_at` only when EUR or USD rates change. This milestone does not add SQL, run SQL, touch `.env.local`, or change product, inventory, or order workflow logic.
+
+**Status:** Accepted

@@ -1918,6 +1918,58 @@ npm run test:e2e
 
 Check results are recorded in the Codex milestone summary.
 
+## Entry 046 — Milestone 043 Admin Settings Foundation Added
+
+**Date:** 18 June 2026
+
+**Tool used:** Codex / Next.js / Supabase authenticated RLS client / Zod / Playwright
+
+**Task attempted:** Add a protected admin settings foundation for Tier A operational settings only.
+
+**What was done:**
+
+* Added a protected admin route at:
+
+```text
+hababy-site/app/admin/(protected)/settings/page.tsx
+```
+
+* Added a settings update server action and client edit form.
+* Added validation for the Tier A editable settings:
+  * `whatsapp_number`
+  * `public_fx_note`
+  * `eur_rate`
+  * `usd_rate`
+* Normalized valid WhatsApp numbers through the existing phone helper before saving.
+* Treated blank optional settings safely as `null`.
+* Updated only the existing singleton settings row by `id`.
+* Stamped `fx_rate_updated_at` server-side when `eur_rate` or `usd_rate` changes.
+* Added Settings to the admin navigation.
+* Added non-mutating Playwright coverage for logged-out `/admin/settings` protection and authenticated settings-page visibility.
+* Updated the test plan and change log.
+* Did not expose settings publicly.
+* Did not create a public settings endpoint.
+* Did not insert, upsert, or create another settings row.
+* Did not enable card/payment settings.
+* Did not edit delivery zones, urgent fees, same-day settings, multipliers, or discounts.
+* Did not add WhatsApp API or automated messages.
+* Did not change product, inventory, or order workflow logic.
+* Did not add SQL.
+* Did not run SQL.
+* Did not use the service-role client.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex milestone summary.
+
 ## Entry 045 — Milestone 042 Admin Product/Pricing Editing Foundation Added
 
 **Date:** 18 June 2026

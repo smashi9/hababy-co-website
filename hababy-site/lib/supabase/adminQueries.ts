@@ -10,6 +10,7 @@ import type {
   SelectedProductSnapshot,
 } from "@/types/order";
 import type { AdminProductDetail, AdminProductListItem } from "@/types/product";
+import type { AdminSettings } from "@/types/settings";
 import type {
   AdminInventoryOverview,
   AdminInventoryItemDetail,
@@ -21,6 +22,7 @@ import type {
 import type { OrderStatusUpdateInput } from "@/lib/validation/orderStatusSchema";
 import type { InventoryUpdateInput } from "@/lib/validation/inventoryUpdateSchema";
 import type { ProductUpdateInput } from "@/lib/validation/productUpdateSchema";
+import type { SettingsUpdateInput } from "@/lib/validation/settingsUpdateSchema";
 
 type AdminAccessResult = {
   supabase: SupabaseClient;
@@ -81,6 +83,14 @@ type AdminProductRow = AdminProductDetail & {
     | null;
 };
 
+type AdminSettingsRow = Omit<AdminSettings, "eur_rate" | "usd_rate" | "discount_3_6_days_pct" | "multiplier_14d" | "multiplier_30d"> & {
+  eur_rate: number | string | null;
+  usd_rate: number | string | null;
+  discount_3_6_days_pct: number | string;
+  multiplier_14d: number | string;
+  multiplier_30d: number | string;
+};
+
 export async function hasAdminUserAccess(supabase: SupabaseClient, user: User) {
   if (!isEmailAllowedForAdmin(user.email)) {
     return false;
@@ -136,6 +146,23 @@ function normalizeNumber(value: unknown) {
 
 function normalizeText(value: unknown) {
   return typeof value === "string" && value.trim() ? value : null;
+}
+
+function normalizeNullableDecimal(value: unknown) {
+  if (typeof value === "number" && Number.isFinite(value)) {
+    return value;
+  }
+
+  if (typeof value === "string" && value.trim()) {
+    const parsedValue = Number(value);
+    return Number.isFinite(parsedValue) ? parsedValue : null;
+  }
+
+  return null;
+}
+
+function normalizeRequiredDecimal(value: unknown) {
+  return normalizeNullableDecimal(value) ?? 0;
 }
 
 export function getShortOrderReference(orderId: string) {
@@ -343,6 +370,125 @@ export async function getAdminProducts(): Promise<AdminProductListItem[]> {
   }
 
   return (data ?? []) as AdminProductListItem[];
+}
+
+function mapAdminSettingsRow(row: AdminSettingsRow): AdminSettings {
+  return {
+    ...row,
+    eur_rate: normalizeNullableDecimal(row.eur_rate),
+    usd_rate: normalizeNullableDecimal(row.usd_rate),
+    discount_3_6_days_pct: normalizeRequiredDecimal(row.discount_3_6_days_pct),
+    multiplier_14d: normalizeRequiredDecimal(row.multiplier_14d),
+    multiplier_30d: normalizeRequiredDecimal(row.multiplier_30d),
+  };
+}
+
+export async function getAdminSettings(): Promise<AdminSettings> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("settings")
+    .select(
+      `
+        id,
+        base_currency,
+        whatsapp_number,
+        public_fx_note,
+        eur_rate,
+        usd_rate,
+        fx_rate_updated_at,
+        card_enabled,
+        same_day_enabled,
+        urgent_min_notice_hours,
+        urgent_fee_48_72,
+        urgent_fee_24_48,
+        minimum_order_value_mad,
+        discount_3_6_days_pct,
+        multiplier_14d,
+        multiplier_30d,
+        created_at,
+        updated_at
+      `
+    )
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error("Could not load admin settings.");
+  }
+
+  if (!data) {
+    throw new Error("Settings row is missing. Ask for Claude/SQL policy review before continuing.");
+  }
+
+  return mapAdminSettingsRow(data as AdminSettingsRow);
+}
+
+export async function updateAdminSettings(
+  input: SettingsUpdateInput
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data: currentData, error: currentError } = await supabase
+    .from("settings")
+    .select("id, eur_rate, usd_rate, fx_rate_updated_at")
+    .eq("id", input.id)
+    .maybeSingle();
+
+  if (currentError) {
+    return {
+      ok: false,
+      message: "Could not load the existing settings row. Please refresh and try again.",
+    };
+  }
+
+  if (!currentData?.id) {
+    return {
+      ok: false,
+      message: "Settings were not updated because the singleton settings row was not found.",
+    };
+  }
+
+  const currentEurRate = normalizeNullableDecimal(currentData.eur_rate);
+  const currentUsdRate = normalizeNullableDecimal(currentData.usd_rate);
+  const fxRateChanged = currentEurRate !== input.eur_rate || currentUsdRate !== input.usd_rate;
+  const updatePayload: {
+    whatsapp_number: string | null;
+    public_fx_note: string | null;
+    eur_rate: number | null;
+    usd_rate: number | null;
+    fx_rate_updated_at?: string;
+  } = {
+    whatsapp_number: input.whatsapp_number,
+    public_fx_note: input.public_fx_note,
+    eur_rate: input.eur_rate,
+    usd_rate: input.usd_rate,
+  };
+
+  if (fxRateChanged) {
+    updatePayload.fx_rate_updated_at = new Date().toISOString();
+  }
+
+  const { data, error } = await supabase
+    .from("settings")
+    .update(updatePayload)
+    .eq("id", input.id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      message: "Could not update settings. Please refresh and try again.",
+    };
+  }
+
+  if (!data?.id) {
+    return {
+      ok: false,
+      message: "Settings were not updated because the existing settings row was not found.",
+    };
+  }
+
+  return { ok: true };
 }
 
 export async function getAdminProductById(id: string): Promise<AdminProductDetail | null> {

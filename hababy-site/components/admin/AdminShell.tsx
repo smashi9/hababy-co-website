@@ -26,6 +26,9 @@ export function AdminShell({
             <Link className="btn btn-secondary" href="/admin/inventory">
               Inventory
             </Link>
+            <Link className="btn btn-secondary" href="/admin/settings">
+              Settings
+            </Link>
             <form action={signOutAdmin}>
               <button className="btn btn-primary" type="submit">
                 Sign out

@@ -352,6 +352,7 @@ Current safe default Playwright scope:
 [ ] /admin/orders is not publicly visible without login
 [ ] Logged-out /admin/products redirects to /admin/login
 [ ] Logged-out /admin/products/[productId] redirects to /admin/login
+[ ] Logged-out /admin/settings redirects to /admin/login
 ```
 
 Admin status update tests are intentionally not part of the default Playwright smoke suite because
@@ -387,6 +388,11 @@ The gated inventory mutation test may update `notes` only on the specified exist
 It must not change `status`, `cleaning_status`, `current_order_id`, product availability, or any
 identity fields. The normal `npm run test:e2e` path must remain safe and skipped by default unless
 the explicit mutation gate is enabled.
+
+Admin settings checks may run as authenticated, non-mutating Playwright tests when admin e2e
+credentials are present. The default suite may verify that `/admin/settings` opens, shows the Tier A
+settings form fields, and clearly says settings are not live-wired yet, but it must not submit
+settings updates by default.
 
 Recommended Codex behavior:
 
@@ -1072,12 +1078,25 @@ Test statuses:
 
 ## Settings Admin Tests
 
+Current Tier A scope:
+
 ```text
+[ ] Logged-out /admin/settings redirects to /admin/login
+[ ] Authenticated admin can open /admin/settings
 [ ] Admin can edit WhatsApp number
-[ ] Admin can enable/disable payment methods
 [ ] Card remains disabled by default
 [ ] Admin can edit EUR rate
 [ ] Admin can edit USD rate
+[ ] Admin can edit public FX note
+[ ] Settings save updates only the existing singleton settings row
+[ ] FX rate timestamp updates when EUR or USD rate changes
+[ ] Unknown or deferred settings fields are rejected
+```
+
+Deferred settings scope:
+
+```text
+[ ] Admin can enable/disable payment methods
 [ ] Admin can edit delivery zones
 [ ] Admin can edit delivery fees
 [ ] Admin can edit urgent fee settings

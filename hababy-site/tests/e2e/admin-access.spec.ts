@@ -39,6 +39,13 @@ test.describe("logged-out admin access", () => {
     await expect(page).toHaveURL(/\/admin\/login/);
     await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
   });
+
+  test("/admin/settings redirects to /admin/login", async ({ page }) => {
+    await page.goto("/admin/settings");
+    await expect(page).toHaveURL(/\/admin\/login/);
+    await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Settings foundation/i })).toHaveCount(0);
+  });
 });
 
 test.describe("authenticated admin access", () => {
@@ -155,5 +162,23 @@ test.describe("authenticated admin access", () => {
     await expect(page.getByRole("button", { name: /Save inventory state/i })).toBeVisible();
     await expect(page.getByLabel(/Item status/i)).toBeVisible();
     await expect(page.getByLabel(/Cleaning status/i)).toBeVisible();
+  });
+
+  test("admin can view settings foundation without mutating data", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByLabel(/Email/i).fill(adminEmail ?? "");
+    await page.getByLabel(/Password/i).fill(adminPassword ?? "");
+    await page.getByRole("button", { name: /^Sign in$/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/orders/);
+    await page.goto("/admin/settings");
+
+    await expect(page).toHaveURL(/\/admin\/settings/);
+    await expect(page.getByRole("heading", { name: /Settings foundation/i })).toBeVisible();
+    await expect(page.getByLabel(/WhatsApp number/i)).toBeVisible();
+    await expect(page.getByLabel(/EUR rate/i)).toBeVisible();
+    await expect(page.getByLabel(/USD rate/i)).toBeVisible();
+    await expect(page.getByLabel(/Public FX note/i)).toBeVisible();
+    await expect(page.getByText(/not live-wired/i)).toBeVisible();
   });
 });
