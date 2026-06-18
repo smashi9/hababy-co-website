@@ -350,6 +350,8 @@ Current safe default Playwright scope:
 [ ] Logged-out /admin/inventory redirects to /admin/login
 [ ] /admin/login loads
 [ ] /admin/orders is not publicly visible without login
+[ ] Logged-out /admin/products redirects to /admin/login
+[ ] Logged-out /admin/products/[productId] redirects to /admin/login
 ```
 
 Admin status update tests are intentionally not part of the default Playwright smoke suite because
@@ -956,16 +958,20 @@ Admin WhatsApp handoff tests:
 
 ```text
 [ ] Admin can view product list
-[ ] Admin can create product
-[ ] Admin can edit product
-[ ] Admin can hide/show product
+[ ] Admin can open an existing product edit page
+[ ] Admin can edit product name, description, safety notes, cleaning notes, and age/weight/height guidance
 [ ] Admin can edit prices
 [ ] Admin can edit deposit
-[ ] Admin can edit included items
-[ ] Admin can edit safety notes
-[ ] Admin can edit age, weight, height, and specification guidance
-[ ] Admin can set availability mode
-[ ] Admin can toggle model-image note
+[ ] Admin can edit featured status
+[ ] Admin can edit display order
+[ ] Admin product updates use authenticated RLS access, not service role
+[ ] Admin product updates revalidate public catalogue/request pages
+[ ] Product edit page shows slug, category, active, and availability mode as read-only
+[ ] Admin cannot create products in Milestone 042
+[ ] Admin cannot delete products in Milestone 042
+[ ] Admin cannot edit active or availability_mode in Milestone 042
+[ ] Admin cannot edit slug, category, images, included items, or optional accessories in Milestone 042
+[ ] Default Playwright suite opens product edit pages without submitting product updates
 ```
 
 ## Bundles Admin Tests

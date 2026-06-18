@@ -407,3 +407,39 @@ Owner confirmation/QC gate:
 **Safety decision:** Updates use the authenticated admin RLS client and are blocked when `current_order_id is not null`. This milestone does not reserve inventory, write `current_order_id`, create or delete inventory units, add product CRUD, add SQL, or run SQL.
 
 **Status:** Accepted
+
+## Change 014 — Admin Product and Pricing Editing Added
+
+**Date:** 18 June 2026
+
+**Change type:** Admin workflow / catalogue pricing
+
+**Summary:** Added admin-only editing for existing product copy and pricing fields.
+
+**Reason:** The owner needs to update catalogue wording, guidance, rental prices, deposits, featured status, and display order without using Supabase directly.
+
+**Files affected:**
+
+* `hababy-site/app/admin/(protected)/products/actions.ts`
+* `hababy-site/app/admin/(protected)/products/page.tsx`
+* `hababy-site/app/admin/(protected)/products/[productId]/page.tsx`
+* `hababy-site/components/admin/AdminShell.tsx`
+* `hababy-site/components/admin/ProductEditForm.tsx`
+* `hababy-site/components/admin/ProductTable.tsx`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/lib/validation/productUpdateSchema.ts`
+* `hababy-site/types/product.ts`
+* `hababy-site/tests/e2e/admin-access.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Editable fields decision:** Admins may edit only product copy, guidance, pricing/deposit, featured status, and display order.
+
+**Read-only fields decision:** The admin UI does not edit `active`, `availability_mode`, `slug`, `category_id`, image/gallery fields, included items, optional accessories, child-detail requirements, model-image note, or product identity fields.
+
+**Public consequence decision:** Product copy and pricing changes are immediately customer-visible after cache revalidation. Visibility controls remain out of scope for a later owner-approved milestone.
+
+**Safety decision:** Updates use the authenticated admin RLS client, not the service-role client. This milestone does not create or delete products, add category CRUD, upload images, add checkout/payment logic, add reservation logic, add SQL, or run SQL.
+
+**Status:** Accepted

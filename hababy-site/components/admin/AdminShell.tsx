@@ -20,6 +20,9 @@ export function AdminShell({
             <Link className="btn btn-secondary" href="/admin/orders">
               Orders
             </Link>
+            <Link className="btn btn-secondary" href="/admin/products">
+              Products
+            </Link>
             <Link className="btn btn-secondary" href="/admin/inventory">
               Inventory
             </Link>

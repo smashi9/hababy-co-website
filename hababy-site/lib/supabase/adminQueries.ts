@@ -9,6 +9,7 @@ import type {
   AdminOrderListItem,
   SelectedProductSnapshot,
 } from "@/types/order";
+import type { AdminProductDetail, AdminProductListItem } from "@/types/product";
 import type {
   AdminInventoryOverview,
   AdminInventoryItemDetail,
@@ -19,6 +20,7 @@ import type {
 } from "@/types/inventory";
 import type { OrderStatusUpdateInput } from "@/lib/validation/orderStatusSchema";
 import type { InventoryUpdateInput } from "@/lib/validation/inventoryUpdateSchema";
+import type { ProductUpdateInput } from "@/lib/validation/productUpdateSchema";
 
 type AdminAccessResult = {
   supabase: SupabaseClient;
@@ -64,6 +66,17 @@ type AdminInventoryItemRow = AdminInventoryUnitRow & {
         id: string;
         name: string;
         slug: string;
+      }[]
+    | null;
+};
+
+type AdminProductRow = AdminProductDetail & {
+  category:
+    | {
+        name: string;
+      }
+    | {
+        name: string;
       }[]
     | null;
 };
@@ -272,6 +285,148 @@ export async function getAdminOrders(): Promise<AdminOrderListItem[]> {
   }
 
   return ((data ?? []) as AdminOrderRow[]).map(mapOrderRow);
+}
+
+function mapAdminProductRow(row: AdminProductRow): AdminProductDetail {
+  const category = Array.isArray(row.category) ? row.category[0] ?? null : row.category;
+
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    category_name: category?.name ?? null,
+    description: row.description,
+    safety_notes: row.safety_notes,
+    cleaning_notes: row.cleaning_notes,
+    age_guidance: row.age_guidance,
+    weight_guidance: row.weight_guidance,
+    height_guidance: row.height_guidance,
+    daily_price_mad: row.daily_price_mad,
+    weekly_price_mad: row.weekly_price_mad,
+    monthly_price_mad: row.monthly_price_mad,
+    deposit_mad: row.deposit_mad,
+    featured: row.featured,
+    display_order: row.display_order,
+    active: row.active,
+    availability_mode: row.availability_mode,
+    requires_child_details: row.requires_child_details,
+    model_image_note: row.model_image_note,
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
+
+export async function getAdminProducts(): Promise<AdminProductListItem[]> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      `
+        id,
+        name,
+        slug,
+        daily_price_mad,
+        weekly_price_mad,
+        monthly_price_mad,
+        deposit_mad,
+        featured,
+        display_order,
+        active,
+        availability_mode
+      `
+    )
+    .order("display_order", { ascending: true })
+    .order("name", { ascending: true });
+
+  if (error) {
+    throw new Error("Could not load admin products.");
+  }
+
+  return (data ?? []) as AdminProductListItem[];
+}
+
+export async function getAdminProductById(id: string): Promise<AdminProductDetail | null> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("products")
+    .select(
+      `
+        id,
+        name,
+        slug,
+        description,
+        safety_notes,
+        cleaning_notes,
+        age_guidance,
+        weight_guidance,
+        height_guidance,
+        daily_price_mad,
+        weekly_price_mad,
+        monthly_price_mad,
+        deposit_mad,
+        featured,
+        display_order,
+        active,
+        availability_mode,
+        requires_child_details,
+        model_image_note,
+        created_at,
+        updated_at,
+        category:categories (
+          name
+        )
+      `
+    )
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error("Could not load this product.");
+  }
+
+  return data ? mapAdminProductRow(data as unknown as AdminProductRow) : null;
+}
+
+export async function updateAdminProduct(
+  input: ProductUpdateInput
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("products")
+    .update({
+      name: input.name,
+      description: input.description,
+      safety_notes: input.safety_notes,
+      cleaning_notes: input.cleaning_notes,
+      age_guidance: input.age_guidance,
+      weight_guidance: input.weight_guidance,
+      height_guidance: input.height_guidance,
+      daily_price_mad: input.daily_price_mad,
+      weekly_price_mad: input.weekly_price_mad,
+      monthly_price_mad: input.monthly_price_mad,
+      deposit_mad: input.deposit_mad,
+      featured: input.featured,
+      display_order: input.display_order,
+    })
+    .eq("id", input.id)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      message: "Could not update this product. Please refresh and try again.",
+    };
+  }
+
+  if (!data?.id) {
+    return {
+      ok: false,
+      message: "This product was not updated because it could not be found.",
+    };
+  }
+
+  return { ok: true };
 }
 
 export async function getAdminInventoryOverview(): Promise<AdminInventoryOverview> {

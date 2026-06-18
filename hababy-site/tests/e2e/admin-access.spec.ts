@@ -26,6 +26,19 @@ test.describe("logged-out admin access", () => {
     await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
     await expect(page.getByRole("heading", { name: /Inventory visibility/i })).toHaveCount(0);
   });
+
+  test("/admin/products redirects to /admin/login", async ({ page }) => {
+    await page.goto("/admin/products");
+    await expect(page).toHaveURL(/\/admin\/login/);
+    await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Product editing/i })).toHaveCount(0);
+  });
+
+  test("/admin/products/[productId] redirects to /admin/login", async ({ page }) => {
+    await page.goto("/admin/products/00000000-0000-0000-0000-000000000000");
+    await expect(page).toHaveURL(/\/admin\/login/);
+    await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
+  });
 });
 
 test.describe("authenticated admin access", () => {
@@ -93,6 +106,32 @@ test.describe("authenticated admin access", () => {
     await expect(
       page.getByRole("table").or(page.getByText(/No inventory units found/i))
     ).toBeVisible();
+  });
+
+  test("admin can view products and open a product edit page without mutating data", async ({ page }) => {
+    await page.goto("/admin/login");
+    await page.getByLabel(/Email/i).fill(adminEmail ?? "");
+    await page.getByLabel(/Password/i).fill(adminPassword ?? "");
+    await page.getByRole("button", { name: /^Sign in$/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/orders/);
+    await page.getByRole("link", { name: /^Products$/i }).click();
+
+    await expect(page).toHaveURL(/\/admin\/products/);
+    await expect(page.getByRole("heading", { name: /Product editing/i })).toBeVisible();
+    await expect(page.getByText("Copy and pricing", { exact: true })).toBeVisible();
+
+    const firstEditLink = page.getByRole("link", { name: /^Edit$/i }).first();
+
+    if ((await firstEditLink.count()) === 0) {
+      test.skip(true, "No products available for the non-mutating product edit-page check.");
+    }
+
+    await firstEditLink.click();
+    await expect(page).toHaveURL(/\/admin\/products\/[0-9a-f-]+/);
+    await expect(page.getByRole("button", { name: /Save product/i })).toBeVisible();
+    await expect(page.getByLabel(/Product name/i)).toBeVisible();
+    await expect(page.getByLabel(/Daily price MAD/i)).toBeVisible();
   });
 
   test("admin can open an inventory edit page without mutating data", async ({ page }) => {

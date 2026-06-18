@@ -1918,6 +1918,55 @@ npm run test:e2e
 
 Check results are recorded in the Codex milestone summary.
 
+## Entry 045 — Milestone 042 Admin Product/Pricing Editing Foundation Added
+
+**Date:** 18 June 2026
+
+**Tool used:** Codex / Next.js / Supabase authenticated RLS client / Zod / Playwright
+
+**Task attempted:** Add admin-only editing for existing product copy and pricing.
+
+**What was done:**
+
+* Added protected admin product routes:
+
+```text
+hababy-site/app/admin/(protected)/products/page.tsx
+hababy-site/app/admin/(protected)/products/[productId]/page.tsx
+```
+
+* Added a Zod validation schema for product updates.
+* Added an admin server action for product updates.
+* Added an admin product list table and product edit form.
+* Added Products to the admin navigation.
+* Added authenticated admin RLS query helpers for listing, loading, and updating products.
+* Re-verified admin inside the update helper with `requireVerifiedAdminSession()`.
+* Updated only the approved copy/pricing fields: `name`, `description`, `safety_notes`, `cleaning_notes`, `age_guidance`, `weight_guidance`, `height_guidance`, `daily_price_mad`, `weekly_price_mad`, `monthly_price_mad`, `deposit_mad`, `featured`, and `display_order`.
+* Revalidated `/products`, `/products/[slug]`, `/request`, `/admin/products`, and `/admin/products/[productId]` after successful product updates.
+* Added non-mutating Playwright coverage for logged-out product admin protection and authenticated product edit-page visibility.
+* Updated the test plan and change log.
+* Did not use the service-role client.
+* Did not edit `active`, `availability_mode`, `slug`, `category_id`, image/gallery fields, included items, or optional accessories.
+* Did not create or delete products.
+* Did not add category CRUD.
+* Did not add image upload.
+* Did not add checkout/payment logic.
+* Did not add reservation logic.
+* Did not edit Supabase SQL files.
+* Did not run SQL.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex milestone summary.
+
 ## Entry 044 — Gated Inventory Edit Playwright Test Added
 
 **Date:** 18 June 2026
