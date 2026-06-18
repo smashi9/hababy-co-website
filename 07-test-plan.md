@@ -347,6 +347,7 @@ Current safe default Playwright scope:
 [ ] The phone input is visible
 [ ] /supabase-test loads
 [ ] Logged-out /admin/orders redirects to /admin/login
+[ ] Logged-out /admin/orders/[id] redirects to /admin/login
 [ ] Logged-out /admin/inventory redirects to /admin/login
 [ ] /admin/login loads
 [ ] /admin/orders is not publicly visible without login
@@ -364,6 +365,11 @@ Admin WhatsApp handoff checks may run as authenticated, non-mutating Playwright 
 `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present. These tests may verify that the handoff
 section and copy button are visible on an existing order detail page, but they must not click the
 external WhatsApp link or send messages.
+
+Admin internal order notes checks may run as authenticated, non-mutating Playwright tests when
+`E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present. These tests may verify that an existing
+order detail page shows the private internal notes textarea, save control, and customer-safety copy,
+but they must not submit the form in the default suite.
 
 Admin inventory visibility checks may run as authenticated, non-mutating Playwright tests when
 `E2E_ADMIN_EMAIL` and `E2E_ADMIN_PASSWORD` are present. These tests may verify that the inventory
@@ -958,6 +964,22 @@ Admin WhatsApp handoff tests:
 [ ] Non-admin cannot access admin pages
 [ ] Logged-out user is redirected away from protected admin pages
 [ ] Admin can log out
+```
+
+## Orders Admin Tests
+
+```text
+[ ] Logged-out /admin/orders/[id] redirects to /admin/login
+[ ] Authenticated admin order detail shows private internal notes textarea
+[ ] Authenticated admin order detail shows save internal notes control
+[ ] Internal notes save updates only orders.internal_notes
+[ ] Internal notes can be edited for every order status
+[ ] Internal notes update uses authenticated RLS access, not service role
+[ ] Internal notes are not included in WhatsApp handoff messages
+[ ] Internal notes are not shown on public pages or customer-facing messages
+[ ] Payment notes remain read-only in Milestone 044
+[ ] Customer notes remain read-only in Milestone 044
+[ ] Default Playwright suite does not submit internal note updates
 ```
 
 ## Products Admin Tests

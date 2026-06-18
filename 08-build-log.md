@@ -1918,6 +1918,60 @@ npm run test:e2e
 
 Check results are recorded in the Codex milestone summary.
 
+## Entry 047 — Milestone 044 Admin Order Internal Notes Added
+
+**Date:** 18 June 2026
+
+**Tool used:** Codex / Next.js / Supabase authenticated RLS client / Zod / Playwright
+
+**Task attempted:** Add admin-only editing for private internal notes on existing orders.
+
+**What was done:**
+
+* Added a strict Zod validation schema for internal order notes at:
+
+```text
+hababy-site/lib/validation/orderInternalNotesSchema.ts
+```
+
+* Added an admin-only internal notes form at:
+
+```text
+hababy-site/components/admin/OrderInternalNotesForm.tsx
+```
+
+* Replaced the read-only internal notes display on admin order detail pages with an always-visible editable private notes form.
+* Kept customer notes and payment notes read-only.
+* Added a server action that validates `orderId` and `internal_notes`, saves blank notes as `null`, and revalidates only admin order routes.
+* Added an admin query helper that re-verifies admin access with `requireVerifiedAdminSession()`.
+* Updated only `orders.internal_notes`, keyed by `orders.id`.
+* Did not add an order status guard, so notes can be edited for all order statuses.
+* Added non-mutating Playwright coverage for logged-out order detail protection and authenticated internal-notes form visibility.
+* Updated the test plan and change log.
+* Did not use the service-role client.
+* Did not edit order status.
+* Did not edit `payment_notes`.
+* Did not edit money fields.
+* Did not touch inventory or `current_order_id`.
+* Did not add reservation logic.
+* Did not modify WhatsApp handoff.
+* Did not include internal notes in customer-facing messages.
+* Did not add email, notification, or payment logic.
+* Did not add SQL.
+* Did not run SQL.
+* Did not touch `.env.local`.
+* Did not commit or push.
+
+**Checks run:**
+
+```bash
+npm run lint
+npm run build
+npm run test:e2e
+```
+
+Check results are recorded in the Codex milestone summary.
+
 ## Entry 046 — Milestone 043 Admin Settings Foundation Added
 
 **Date:** 18 June 2026

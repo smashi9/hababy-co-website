@@ -477,3 +477,35 @@ Owner confirmation/QC gate:
 **Safety decision:** Updates use the authenticated admin RLS client, not the service-role client. The update path targets the existing singleton settings row by `id`, never inserts or upserts, and stamps `fx_rate_updated_at` only when EUR or USD rates change. This milestone does not add SQL, run SQL, touch `.env.local`, or change product, inventory, or order workflow logic.
 
 **Status:** Accepted
+
+## Change 016 — Admin Order Internal Notes Added
+
+**Date:** 18 June 2026
+
+**Change type:** Admin workflow / order operations
+
+**Summary:** Added admin-only editing for private internal notes on existing orders.
+
+**Reason:** The owner needs a protected place to record private operational context for an order without changing status, payment details, inventory, or customer-facing messages.
+
+**Files affected:**
+
+* `hababy-site/app/admin/(protected)/orders/actions.ts`
+* `hababy-site/components/admin/OrderDetailView.tsx`
+* `hababy-site/components/admin/OrderInternalNotesForm.tsx`
+* `hababy-site/lib/supabase/adminQueries.ts`
+* `hababy-site/lib/validation/orderInternalNotesSchema.ts`
+* `hababy-site/tests/e2e/admin-access.spec.ts`
+* `07-test-plan.md`
+* `08-build-log.md`
+* `11-change-log.md`
+
+**Editable fields decision:** Admins may edit only `orders.internal_notes`.
+
+**Read-only fields decision:** Status, payment notes, customer notes, selected products, money fields, dates, delivery fields, customer fields, inventory fields, product fields, WhatsApp messages, and WhatsApp links remain read-only or out of scope.
+
+**Customer-safety decision:** Internal notes are admin-only and are not included in WhatsApp handoff, public pages, request confirmation copy, emails, notifications, or customer-facing messages.
+
+**Safety decision:** Updates use the authenticated admin RLS client, not the service-role client. The update path targets `orders.id`, updates only `internal_notes`, and does not filter by status so notes remain editable for confirmed, cancelled, and other existing statuses. This milestone does not add SQL, run SQL, touch `.env.local`, edit payment fields, touch inventory, write `current_order_id`, or add reservation, notification, WhatsApp API, or payment logic.
+
+**Status:** Accepted

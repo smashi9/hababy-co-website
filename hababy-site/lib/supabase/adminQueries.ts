@@ -20,6 +20,7 @@ import type {
   InventoryStatus,
 } from "@/types/inventory";
 import type { OrderStatusUpdateInput } from "@/lib/validation/orderStatusSchema";
+import type { OrderInternalNotesInput } from "@/lib/validation/orderInternalNotesSchema";
 import type { InventoryUpdateInput } from "@/lib/validation/inventoryUpdateSchema";
 import type { ProductUpdateInput } from "@/lib/validation/productUpdateSchema";
 import type { SettingsUpdateInput } from "@/lib/validation/settingsUpdateSchema";
@@ -785,6 +786,36 @@ export async function updateAdminOrderStatus({
     return {
       ok: false,
       message: "This request can no longer be changed here because it is not new.",
+    };
+  }
+
+  return { ok: true };
+}
+
+export async function updateAdminOrderInternalNotes(
+  input: OrderInternalNotesInput
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { supabase } = await requireVerifiedAdminSession();
+  const { data, error } = await supabase
+    .from("orders")
+    .update({
+      internal_notes: input.internal_notes,
+    })
+    .eq("id", input.orderId)
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    return {
+      ok: false,
+      message: "Could not update internal notes. Please refresh and try again.",
+    };
+  }
+
+  if (!data?.id) {
+    return {
+      ok: false,
+      message: "Internal notes were not updated because this order could not be found.",
     };
   }
 

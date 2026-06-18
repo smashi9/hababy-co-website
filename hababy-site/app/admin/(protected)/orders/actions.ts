@@ -1,12 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { updateAdminOrderStatus } from "@/lib/supabase/adminQueries";
+import {
+  updateAdminOrderInternalNotes,
+  updateAdminOrderStatus,
+} from "@/lib/supabase/adminQueries";
+import { orderInternalNotesSchema } from "@/lib/validation/orderInternalNotesSchema";
 import { orderStatusUpdateSchema } from "@/lib/validation/orderStatusSchema";
 
 export type OrderStatusActionState = {
   status: "idle" | "success" | "error";
   message: string;
+};
+
+export type OrderInternalNotesActionState = {
+  status: "idle" | "success" | "error";
+  message: string;
+  fieldErrors?: Record<string, string[] | undefined>;
 };
 
 function formValue(formData: FormData, key: string) {
@@ -47,5 +57,40 @@ export async function updateOrderStatus(
   return {
     status: "success",
     message: `Request marked ${label}.`,
+  };
+}
+
+export async function updateOrderInternalNotes(
+  _prevState: OrderInternalNotesActionState,
+  formData: FormData
+): Promise<OrderInternalNotesActionState> {
+  const parsed = orderInternalNotesSchema.safeParse({
+    orderId: formValue(formData, "orderId"),
+    internal_notes: formValue(formData, "internal_notes"),
+  });
+
+  if (!parsed.success) {
+    return {
+      status: "error",
+      message: "Please check the internal notes field and try again.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  const result = await updateAdminOrderInternalNotes(parsed.data);
+
+  if (!result.ok) {
+    return {
+      status: "error",
+      message: result.message,
+    };
+  }
+
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${parsed.data.orderId}`);
+
+  return {
+    status: "success",
+    message: "Internal notes saved. They remain private to admin.",
   };
 }

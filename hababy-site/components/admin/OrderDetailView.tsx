@@ -1,4 +1,5 @@
 import type { AdminOrderDetail } from "@/types/order";
+import { OrderInternalNotesForm } from "./OrderInternalNotesForm";
 import { OrderStatusActions } from "./OrderStatusActions";
 import { WhatsAppHandoff } from "./WhatsAppHandoff";
 import { formatDate, formatDateTime, formatLabel, formatMoney, orderReference } from "./orderFormat";
@@ -93,6 +94,8 @@ export function OrderDetailView({ order }: { order: AdminOrderDetail }) {
 
       <WhatsAppHandoff order={order} />
 
+      <OrderInternalNotesForm orderId={order.id} internalNotes={order.internal_notes} />
+
       <section className="grid gap-4 md:grid-cols-2">
         <div className="card">
           <h2 className="text-xl font-black text-ink">Estimate breakdown</h2>
@@ -139,13 +142,12 @@ export function OrderDetailView({ order }: { order: AdminOrderDetail }) {
         </div>
       </section>
 
-      {(order.payment_notes || order.internal_notes || order.customer?.notes) ? (
+      {(order.payment_notes || order.customer?.notes) ? (
         <section className="card">
-          <h2 className="text-xl font-black text-ink">Notes</h2>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <h2 className="text-xl font-black text-ink">Customer and payment notes</h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
             <DetailField label="Customer notes" value={order.customer?.notes} />
             <DetailField label="Payment notes" value={order.payment_notes} />
-            <DetailField label="Internal notes" value={order.internal_notes} />
           </div>
         </section>
       ) : null}

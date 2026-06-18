@@ -20,6 +20,12 @@ test.describe("logged-out admin access", () => {
     await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
   });
 
+  test("/admin/orders/[id] redirects to /admin/login", async ({ page }) => {
+    await page.goto("/admin/orders/00000000-0000-0000-0000-000000000000");
+    await expect(page).toHaveURL(/\/admin\/login/);
+    await expect(page.getByRole("heading", { name: /Admin login/i })).toBeVisible();
+  });
+
   test("/admin/inventory redirects to /admin/login", async ({ page }) => {
     await page.goto("/admin/inventory");
     await expect(page).toHaveURL(/\/admin\/login/);
@@ -96,6 +102,9 @@ test.describe("authenticated admin access", () => {
     await expect(page.getByTestId("whatsapp-handoff")).toBeVisible();
     await expect(page.getByRole("heading", { name: /WhatsApp message draft/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /Copy message/i })).toBeVisible();
+    await expect(page.getByRole("textbox", { name: /Internal notes/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Save internal notes/i })).toBeVisible();
+    await expect(page.getByText(/not sent to the customer/i)).toBeVisible();
   });
 
   test("admin can view read-only inventory visibility", async ({ page }) => {
